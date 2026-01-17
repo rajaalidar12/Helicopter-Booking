@@ -1,75 +1,77 @@
-/* ===============================
-   BOOK FLIGHT
-   =============================== */
+/* =====================================================
+   BOOK FLIGHT (OTP PROTECTED + ANTI DOUBLE CLICK)
+   ===================================================== */
 document.getElementById("bookingForm")?.addEventListener("submit", async e => {
   e.preventDefault();
 
-  const data = {
-    passengerName: passengerName.value.trim(),
-    age: Number(age.value),
-    phone: phone.value.trim(),
-    email: email.value.trim(),
-    from: from.value.trim(),
-    to: to.value.trim(),
-    date: date.value
-  };
+  const result = document.getElementById("result");
+  const submitBtn = document.getElementById("submitBtn");
 
-  // Basic validation
-  if (!data.passengerName || data.age <= 0 || !data.phone || !data.email) {
-    result.innerText = "❌ Please fill all fields correctly";
+  // 🔐 Check OTP token
+  const token = localStorage.getItem("passengerToken");
+  if (!token) {
+    alert("Please login via OTP before booking");
+    window.location.href = "login.html";
     return;
   }
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  /* ========= BASIC VALIDATION ========= */
+  if (
+    !formData.get("passengerName") ||
+    !formData.get("age") ||
+    !formData.get("phone") ||
+    !formData.get("from") ||
+    !formData.get("to") ||
+    !formData.get("date") ||
+    !formData.get("idType") ||
+    !formData.get("idNumber")
+  ) {
+    result.innerText = "❌ Please fill all required fields";
+    return;
+  }
+
+  /* ========= DISABLE BUTTON (ANTI DOUBLE CLICK) ========= */
+  submitBtn.disabled = true;
+  submitBtn.innerText = "Booking... ⏳";
+  result.innerText = "";
 
   try {
     const res = await fetch("http://localhost:4000/book", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+      headers: {
+        Authorization: "Bearer " + token // ✅ REQUIRED BY BACKEND
+      },
+      body: formData
     });
 
-    const response = await res.json();
+    const data = await res.json();
 
     if (res.ok) {
       result.innerText =
-        "✅ Booking Successful! Ticket: " + response.ticketNumber;
+        "✅ Booking Successful! Ticket Number: " + data.ticketNumber;
+      form.reset();
     } else {
-      result.innerText = "❌ " + response.message;
+      result.innerText = "❌ " + (data.message || "Booking failed");
+      submitBtn.disabled = false;
+      submitBtn.innerText = "✈️ Book Flight";
     }
-  } catch {
-    result.innerText = "❌ Server error. Try again.";
+
+  } catch (err) {
+    console.error(err);
+    result.innerText = "❌ Server error. Please try again.";
+    submitBtn.disabled = false;
+    submitBtn.innerText = "✈️ Book Flight";
   }
 });
 
-/* ===============================
-   VIEW / CANCEL BOOKING
-   =============================== */
-async function loadBooking() {
-  const ticket = ticketNumber.value.trim();
-  if (!ticket) return;
-
-  const res = await fetch(
-    "http://localhost:4000/passenger/booking/" + ticket
-  );
-  const booking = await res.json();
-
-  if (!res.ok) {
-    bookingDetails.innerHTML = "<p>❌ Booking not found</p>";
-    return;
-  }
-
-  bookingDetails.innerHTML = `
-    <p><b>Name:</b> ${booking.passengerName}</p>
-    <p><b>Date:</b> ${booking.date}</p>
-    <p><b>Status:</b> ${booking.status}</p>
-    <button onclick="cancelBooking('${ticket}')">Cancel Booking</button>
-  `;
-}
-
-async function cancelBooking(ticket) {
-  await fetch(
-    "http://localhost:4000/passenger/cancel-booking/" + ticket,
-    { method: "POST" }
-  );
-
-  bookingDetails.innerHTML = "<p>❌ Booking cancelled</p>";
+/* =====================================================
+   PASSENGER LOGOUT
+   ===================================================== */
+function passengerLogout() {
+  localStorage.removeItem("passengerToken");
+  alert("Logged out successfully");
+  window.location.href = "login.html";
 }

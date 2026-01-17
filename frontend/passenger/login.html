@@ -5,9 +5,9 @@
 </head>
 <body>
 
-<h2>Passenger Login (OTP)</h2>
+<h2>Passenger OTP Login</h2>
 
-<input id="contact" placeholder="Phone or Email">
+<input id="contact" placeholder="Email or Phone">
 <button onclick="sendOTP()">Send OTP</button>
 
 <br><br>
@@ -19,19 +19,21 @@
 
 <script>
 async function sendOTP() {
-  const contact = document.getElementById("contact").value;
+  const contact = document.getElementById("contact").value.trim();
+
   const res = await fetch("http://localhost:4000/passenger-auth/send-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ contact })
   });
+
   const data = await res.json();
   document.getElementById("msg").innerText = data.message;
 }
 
 async function verifyOTP() {
-  const contact = document.getElementById("contact").value;
-  const otp = document.getElementById("otp").value;
+  const contact = document.getElementById("contact").value.trim();
+  const otp = document.getElementById("otp").value.trim();
 
   const res = await fetch("http://localhost:4000/passenger-auth/verify-otp", {
     method: "POST",
@@ -41,9 +43,9 @@ async function verifyOTP() {
 
   const data = await res.json();
 
-  if (data.token) {
-    localStorage.setItem("passengerToken", data.token);
-    window.location.href = "../index.html";
+  if (res.ok) {
+    localStorage.setItem("passengerToken", data.token); // ✅ STORE TOKEN
+    window.location.href = "book.html";                // ✅ REDIRECT
   } else {
     document.getElementById("msg").innerText = data.message;
   }

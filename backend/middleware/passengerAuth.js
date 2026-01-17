@@ -1,17 +1,26 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = function (req, res, next) {
-  const token = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
-    return res.status(403).json({ message: "Passenger not authenticated" });
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
+      message: "Passenger not authenticated"
+    });
   }
 
+  const token = authHeader.split(" ")[1];
+
   try {
+    // MUST MATCH routes/passengerAuth.js
     const decoded = jwt.verify(token, "PASSENGER_SECRET");
-    req.passenger = decoded;
+
+    req.passenger = decoded; // optional, for future use
     next();
+
   } catch (err) {
-    return res.status(401).json({ message: "Invalid passenger token" });
+    return res.status(401).json({
+      message: "Passenger not authenticated"
+    });
   }
 };

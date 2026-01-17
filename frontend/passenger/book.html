@@ -3,29 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <title>Kashmir Heli Services | Book Flight</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/passenger.css">
 </head>
 <body>
 
-<div class="container">
-  <h1>🚁 Book Helicopter Flight</h1>
+<div class="booking-wrapper">
 
-  <form id="bookingForm">
-    <input id="passengerName" placeholder="Passenger Name" required>
-    <input id="age" type="number" min="1" max="120" placeholder="Age" required>
-    <input id="phone" placeholder="Phone Number" required>
-    <input id="email" type="email" placeholder="Email" required>
+  <div class="booking-card">
+    <h1>🚁 Book Helicopter Flight</h1>
+    <p class="subtitle">Safe • Scenic • Reliable Air Travel</p>
 
-    <input id="from" placeholder="From" required>
-    <input id="to" placeholder="To" required>
-    <input id="date" type="date" required>
+    <form id="bookingForm" enctype="multipart/form-data">
 
-    <button type="submit">Book Flight</button>
-  </form>
+      <!-- PASSENGER DETAILS -->
+      <h3>👤 Passenger Details</h3>
+      <input name="passengerName" placeholder="Full Name" required>
+      <input name="age" type="number" min="1" max="120" placeholder="Age" required>
+      <input name="phone" placeholder="Mobile Number" required>
+      <input name="email" type="email" placeholder="Email (optional)">
 
-  <p id="result"></p>
+      <!-- TRAVEL DETAILS -->
+      <h3>🧭 Travel Details</h3>
+      <input name="from" placeholder="From Location" required>
+      <input name="to" placeholder="To Location" required>
+      <input name="date" type="date" required>
 
-  <a href="manage.html">Manage / Cancel Booking</a>
+      <!-- IDENTIFICATION -->
+      <h3>🪪 Identification</h3>
+      <select name="idType" required>
+        <option value="">Select ID Type</option>
+        <option>Aadhaar</option>
+        <option>Passport</option>
+        <option>PAN</option>
+        <option>Office ID</option>
+        <option>Other</option>
+      </select>
+
+      <input name="idNumber" placeholder="ID Number" required>
+
+      <label class="file-label">
+        Upload ID Proof (PDF/JPG/PNG)
+        <input type="file" name="idDocument" required>
+      </label>
+
+      <label class="file-label">
+        Supporting Document (optional)
+        <input type="file" name="supportingDocument">
+      </label>
+
+      <!-- EMERGENCY -->
+      <h3>🚨 Emergency Contact</h3>
+      <input name="emergencyName" placeholder="Contact Name" required>
+      <input name="emergencyRelation" placeholder="Relation" required>
+      <input name="emergencyPhone" placeholder="Contact Phone" required>
+
+      <button type="submit" id="submitBtn">✈️ Book Flight</button>
+
+      <p id="result"></p>
+
+    </form>
+
+    <button class="logout-btn" onclick="passengerLogout()">Logout</button>
+  </div>
+
 </div>
 
 <script src="../js/passenger.js"></script>

@@ -1,54 +1,93 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #141e30, #243b55);
-  color: white;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(to bottom, #e0f2ff, #ffffff);
 }
 
-.container {
-  width: 400px;
-  margin: 60px auto;
-  background: rgba(0, 0, 0, 0.7);
+.booking-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.booking-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 520px;
   padding: 25px;
-  border-radius: 10px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
-h1 {
+.booking-card h1 {
   text-align: center;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
   margin-bottom: 20px;
 }
 
-input {
+h3 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  color: #004aad;
+}
+
+input, select {
   width: 100%;
   padding: 10px;
-  margin: 8px 0;
-  border-radius: 5px;
-  border: none;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #004aad;
+}
+
+.file-label {
+  display: block;
+  background: #f3f6ff;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.file-label input {
+  display: none;
 }
 
 button {
   width: 100%;
   padding: 12px;
-  background: #ff9800;
+  background: #004aad;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
 }
 
-button:hover {
-  background: #e68900;
+button:disabled {
+  background: #999;
+  cursor: not-allowed;
 }
 
 #result {
-  margin-top: 15px;
-  text-align: center;
+  margin-top: 12px;
   font-weight: bold;
+  text-align: center;
 }
 
-a {
-  display: block;
+.logout-btn {
   margin-top: 15px;
-  text-align: center;
-  color: #ffcc80;
+  background: #ff4d4d;
 }

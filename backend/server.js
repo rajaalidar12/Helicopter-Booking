@@ -1,7 +1,8 @@
 /********************************************************************
  * KASHMIR HELI SERVICES - FINAL BACKEND
- * Admin + Passenger OTP Auth + Quota + Reports (STABLE)
+ * Admin + Passenger OTP Auth + Quota + Reports + PDF Ticket + Email
  ********************************************************************/
+require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -12,6 +13,10 @@ const path = require("path");
 /* ================= MODELS ================= */
 const Booking = require("./models/Booking");
 const FlightQuota = require("./models/FlightQuota");
+
+/* ================= UTILS ================= */
+const generateTicketPDF = require("./utils/ticketPDF");
+const { sendTicketEmail } = require("./utils/emailSender");
 
 /* ================= ROUTES ================= */
 const adminAuthRoutes = require("./routes/adminAuth");
@@ -63,7 +68,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
   fileFilter: (req, file, cb) => {
     const allowed = /jpg|jpeg|png|pdf/i;
     if (!allowed.test(file.mimetype)) {
@@ -74,11 +79,11 @@ const upload = multer({
 });
 
 /* =================================================
-   PASSENGER BOOK FLIGHT (OTP PROTECTED)  ✅ STEP 5
+   PASSENGER BOOK FLIGHT (OTP PROTECTED)
    ================================================= */
 app.post(
   "/book",
-  passengerAuth, // 🔐 OTP verification required
+  passengerAuth,
   upload.fields([
     { name: "idDocument", maxCount: 1 },
     { name: "supportingDocument", maxCount: 1 }
@@ -107,6 +112,7 @@ app.post(
         });
       }
 
+      // Check quota
       const quota = await FlightQuota.findOne({ date });
       if (!quota || quota.availableSeats <= 0) {
         return res.status(400).json({
@@ -137,12 +143,22 @@ app.post(
         status: "CONFIRMED"
       });
 
+      /* ================= SAVE BOOKING ================= */
       await booking.save();
 
+      /* ================= UPDATE QUOTA ================= */
       quota.bookedSeats += 1;
       quota.availableSeats -= 1;
       await quota.save();
 
+      /* ================= PDF + EMAIL ================= */
+      const pdfPath = await generateTicketPDF(booking);
+
+      if (email) {
+        await sendTicketEmail(email, ticketNumber, pdfPath);
+      }
+
+      /* ================= RESPONSE ================= */
       res.json({
         message: "Booking successful",
         ticketNumber
@@ -158,7 +174,7 @@ app.post(
 );
 
 /* =================================================
-   ADMIN DAILY QUOTA (PROTECTED)
+   ADMIN DAILY QUOTA
    ================================================= */
 app.post("/admin/set-quota", adminAuth, async (req, res) => {
   try {
