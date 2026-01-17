@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Passenger Login | Kashmir Heli Services</title>
+</head>
+<body>
+
+<h2>Passenger Login (OTP)</h2>
+
+<input id="contact" placeholder="Phone or Email">
+<button onclick="sendOTP()">Send OTP</button>
+
+<br><br>
+
+<input id="otp" placeholder="Enter OTP">
+<button onclick="verifyOTP()">Verify OTP</button>
+
+<p id="msg"></p>
+
+<script>
+async function sendOTP() {
+  const contact = document.getElementById("contact").value;
+  const res = await fetch("http://localhost:4000/passenger-auth/send-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contact })
+  });
+  const data = await res.json();
+  document.getElementById("msg").innerText = data.message;
+}
+
+async function verifyOTP() {
+  const contact = document.getElementById("contact").value;
+  const otp = document.getElementById("otp").value;
+
+  const res = await fetch("http://localhost:4000/passenger-auth/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contact, otp })
+  });
+
+  const data = await res.json();
+
+  if (data.token) {
+    localStorage.setItem("passengerToken", data.token);
+    window.location.href = "../index.html";
+  } else {
+    document.getElementById("msg").innerText = data.message;
+  }
+}
+</script>
+
+</body>
+</html>

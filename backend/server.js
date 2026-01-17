@@ -1,5 +1,6 @@
 /********************************************************************
- * KASHMIR HELI SERVICES - FINAL BACKEND (REPORTS + QUOTA STABLE)
+ * KASHMIR HELI SERVICES - FINAL BACKEND
+ * Admin + Passenger OTP Auth + Quota + Reports (STABLE)
  ********************************************************************/
 
 const express = require("express");
@@ -16,9 +17,11 @@ const FlightQuota = require("./models/FlightQuota");
 const adminAuthRoutes = require("./routes/adminAuth");
 const adminBookingRoutes = require("./routes/adminBookings");
 const passengerBookingRoutes = require("./routes/passengerBookings");
+const passengerAuthRoutes = require("./routes/passengerAuth");
 
 /* ================= MIDDLEWARE ================= */
 const adminAuth = require("./middleware/adminAuth");
+const passengerAuth = require("./middleware/passengerAuth");
 
 /* ================= APP ================= */
 const app = express();
@@ -71,10 +74,11 @@ const upload = multer({
 });
 
 /* =================================================
-   PASSENGER BOOK FLIGHT
+   PASSENGER BOOK FLIGHT (OTP PROTECTED)  ✅ STEP 5
    ================================================= */
 app.post(
   "/book",
+  passengerAuth, // 🔐 OTP verification required
   upload.fields([
     { name: "idDocument", maxCount: 1 },
     { name: "supportingDocument", maxCount: 1 }
@@ -197,11 +201,10 @@ app.post("/admin/set-quota", adminAuth, async (req, res) => {
   }
 });
 
-/* ================= ADMIN ROUTES ================= */
+/* ================= ROUTE REGISTRATION ================= */
 app.use("/admin", adminAuthRoutes);
 app.use("/admin", adminBookingRoutes);
-
-/* ================= PASSENGER ROUTES ================= */
+app.use("/passenger-auth", passengerAuthRoutes);
 app.use("/passenger", passengerBookingRoutes);
 
 /* ================= GLOBAL ERROR HANDLER ================= */
