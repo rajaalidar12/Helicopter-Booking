@@ -1,0 +1,208 @@
+/* RESET */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* SKY */
+.sky {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(to bottom, #7ec8ff, #cceeff, #ffffff);
+  z-index: -3;
+}
+
+.clouds {
+  position: absolute;
+  width: 200%;
+  height: 40%;
+  opacity: 0.5;
+  background-repeat: repeat-x;
+  animation: cloudsMove 80s linear infinite;
+}
+
+.cloud1 { top: 10%; }
+.cloud2 { top: 35%; animation-duration: 120s; }
+.cloud3 { top: 60%; animation-duration: 160s; }
+
+@keyframes cloudsMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* HELICOPTER */
+.helicopter {
+  position: fixed;
+  top: 90px;
+  left: -80px;
+  font-size: 48px;
+  animation: fly 18s linear infinite, hover 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes fly {
+  from { left: -80px; }
+  to { left: 110%; }
+}
+
+@keyframes hover {
+  50% { transform: translateY(-10px); }
+}
+
+/* LAYOUT */
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  background: rgba(28,61,90,0.95);
+  padding: 22px;
+  color: white;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 20px;
+}
+
+.tab-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.tab-btn:hover,
+.tab-btn.active {
+  background: rgba(255,255,255,0.2);
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* BOOKING CARD */
+.booking-card {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px;
+  background: rgba(255,255,255,0.93);
+  border-radius: 20px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+  animation: fadeUp 0.8s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.booking-card h2 {
+  text-align: center;
+  color: #1c3d5a;
+}
+
+.subtitle {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #555;
+}
+
+/* FORM */
+#bookingForm {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px 25px;
+}
+
+.form-section {
+  grid-column: span 2;
+  background: #f5f9ff;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.form-section h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #1c3d5a;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #4facfe;
+  box-shadow: 0 0 10px rgba(79,172,254,0.4);
+}
+
+textarea {
+  resize: none;
+}
+
+/* BUTTON */
+.submit-btn {
+  grid-column: span 2;
+  margin-top: 20px;
+  padding: 16px;
+  font-size: 17px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  background: linear-gradient(135deg, #007adf, #00ecbc);
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+}
+
+/* SIMPLE CARD */
+.simple-card {
+  max-width: 650px;
+  margin: auto;
+  padding: 30px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 14px;
+}
+
+.tour-list {
+  list-style: none;
+  padding: 0;
+}
+
+.tour-list li {
+  padding: 6px 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  #bookingForm {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    width: 210px;
+  }
+}

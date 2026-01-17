@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kashmir Heli Services</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SKY BACKGROUND -->
+<div class="sky">
+  <div class="clouds cloud1"></div>
+  <div class="clouds cloud2"></div>
+  <div class="clouds cloud3"></div>
+</div>
+
+<!-- HELICOPTER -->
+<div class="helicopter">🚁</div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">Kashmir Heli Services</h2>
+
+    <button class="tab-btn active" onclick="openTab('book', this)">
+      🚁 Book Flight
+    </button>
+
+    <button class="tab-btn" onclick="openTab('status', this)">
+      📄 Flight Status
+    </button>
+
+    <button class="tab-btn" onclick="openTab('tourism', this)">
+      🏔️ Tourist Places
+    </button>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+
+    <!-- ================= BOOK FLIGHT ================= -->
+    <section id="book" class="tab-content active">
+      <div class="booking-card">
+        <h2>🚁 Kashmir Heli Services – Flight Booking</h2>
+        <p class="subtitle">Safe • Reliable • Scenic Air Travel</p>
+
+        <form id="bookingForm" enctype="multipart/form-data">
+
+          <div class="form-section">
+            <h3>👤 Passenger Details</h3>
+            <input type="text" name="passengerName" placeholder="Full Name" required>
+            <input type="number" name="age" placeholder="Age" required>
+            <input type="date" name="date" required>
+            <input type="text" name="phone" placeholder="Mobile Number" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <textarea name="address" placeholder="Full Address" rows="3" required></textarea>
+          </div>
+
+          <div class="form-section">
+            <h3>🧭 Travel Details</h3>
+            <input type="text" name="from" placeholder="From Location" required>
+            <input type="text" name="to" placeholder="To Location" required>
+          </div>
+
+          <div class="form-section">
+            <h3>🪪 Identification</h3>
+            <select name="idType" required>
+              <option value="">Select ID Type</option>
+              <option>Aadhaar</option>
+              <option>Passport</option>
+              <option>Official ID</option>
+              <option>Other</option>
+            </select>
+            <input type="text" name="idNumber" placeholder="ID Number" required>
+            <input type="file" name="idDocument" required>
+            <input type="file" name="supportingDocument">
+          </div>
+
+          <div class="form-section">
+            <h3>🚨 Emergency Contact</h3>
+            <input type="text" name="emergencyName" placeholder="Contact Name" required>
+            <input type="text" name="emergencyRelation" placeholder="Relation" required>
+            <input type="text" name="emergencyPhone" placeholder="Contact Phone" required>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            ✈️ Book Helicopter
+          </button>
+        </form>
+
+        <p id="result"></p>
+      </div>
+    </section>
+<!-- ================= FLIGHT STATUS ================= -->
+<section id="status" class="tab-content">
+  <div class="simple-card">
+    <h2>📄 Check Flight Status</h2>
+
+    <input
+      type="text"
+      id="statusTicket"
+      placeholder="Enter Ticket Number (HC-XXXXXX)"
+    >
+
+    <button onclick="checkStatus()">Check Status</button>
+
+    <div id="statusResult" class="info"></div>
+<button
+  id="cancelBtn"
+  style="display:none; margin-top:10px;"
+  onclick="cancelBooking()"
+>
+  ❌ Cancel Booking
+</button>
+
+<div id="modifySection" style="display:none; margin-top:15px;">
+  <h3>✏️ Modify Booking</h3>
+
+  <input type="date" id="newDate">
+  <input type="text" id="newPhone" placeholder="New Phone">
+  <input type="email" id="newEmail" placeholder="New Email">
+
+  <button onclick="modifyBooking()">Update Booking</button>
+</div>
+
+
+
+  </div>
+</section>
+
+    <!-- ================= TOURIST PLACES ================= -->
+    <section id="tourism" class="tab-content">
+      <div class="simple-card">
+        <h2>🏔️ Tourist Places in Kashmir</h2>
+        <ul class="tour-list">
+          <li>Gulmarg</li>
+          <li>Sonamarg</li>
+          <li>Pahalgam</li>
+          <li>Dal Lake</li>
+          <li>Mughal Gardens</li>
+          <li>Doodhpathri</li>
+          <li>Yusmarg</li>
+          <li>Bangus Valley</li>
+          <li>Lolab Valley</li>
+          <li>Gurez Valley</li>
+          <li>Wular Lake</li>
+          <li>Manasbal Lake</li>
+          <li>Kokernag</li>
+          <li>Verinag</li>
+          <li>Aharbal Waterfall</li>
+          <li>Naranag</li>
+          <li>Daksum</li>
+          <li>Tosa Maidan</li>
+          <li>Drung Waterfall</li>
+          <li>Pampore (Saffron Fields)</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+function openTab(tabId, btn) {
+  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(tabId).classList.add("active");
+  btn.classList.add("active");
+}
+</script>
+
+</body>
+</html>

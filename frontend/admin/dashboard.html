@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard | Kashmir Heli Services</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+<div class="dashboard">
+  <h1>🚁 Admin Dashboard</h1>
+
+  <!-- ================= DAILY QUOTA ================= -->
+  <section class="card">
+    <h2>Set Daily Quota</h2>
+    <input type="date" id="quotaDate">
+    <input type="number" id="sorties" placeholder="Sorties">
+    <input type="number" id="seats" placeholder="Seats per Sortie">
+    <button type="button" onclick="setQuota()">Save Quota</button>
+  </section>
+
+  <!-- ================= MONTHLY QUOTA ================= -->
+  <section class="card">
+    <h2>Set Monthly Quota</h2>
+    <input type="number" id="quotaYear" placeholder="Year">
+    <input type="number" id="quotaMonth" placeholder="Month (1-12)">
+    <input type="number" id="monthlySorties" placeholder="Sorties per day">
+    <input type="number" id="monthlySeats" placeholder="Seats per sortie">
+    <button type="button" onclick="setMonthlyQuota()">Save Monthly Quota</button>
+  </section>
+
+  <!-- ================= REPORTS ================= -->
+  <section class="card">
+    <h2>📊 Reports Summary</h2>
+    <button type="button" onclick="loadReports()">Load Reports</button>
+
+    <ul id="reportSummary">
+      <li>Total Bookings: -</li>
+      <li>Confirmed Bookings: -</li>
+      <li>Cancelled Bookings: -</li>
+      <li>Total Seats: -</li>
+      <li>Available Seats: -</li>
+    </ul>
+  </section>
+
+  <!-- ================= DATE REPORT ================= -->
+  <section class="card">
+    <h2>📅 Date-wise Report</h2>
+    <input type="date" id="reportDate">
+    <button type="button" onclick="loadDateReport()">Get Report</button>
+    <pre id="dateReport"></pre>
+  </section>
+
+  <!-- ================= BOOKINGS ================= -->
+  <section class="card">
+    <h2>All Bookings</h2>
+    <button type="button" onclick="loadBookings()">Refresh</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket</th>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="bookingTable"></tbody>
+    </table>
+  </section>
+</div>
+
+<script src="../js/admin.js"></script>
+</body>
+</html>

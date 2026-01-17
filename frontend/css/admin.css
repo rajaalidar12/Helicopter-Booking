@@ -1,0 +1,69 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  color: white;
+}
+
+.login-container {
+  width: 350px;
+  margin: 100px auto;
+  padding: 25px;
+  background: rgba(0,0,0,0.75);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.login-container h2 {
+  margin-bottom: 20px;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  border: none;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  background: #ff9800;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-container button:hover {
+  background: #e68900;
+}
+
+#loginMsg {
+  margin-top: 10px;
+}
+
+.dashboard {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+.card {
+  background: rgba(0,0,0,0.75);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  border-bottom: 1px solid #555;
+  text-align: center;
+}

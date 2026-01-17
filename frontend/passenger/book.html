@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kashmir Heli Services | Book Flight</title>
+  <link rel="stylesheet" href="../css/passenger.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>🚁 Book Helicopter Flight</h1>
+
+  <form id="bookingForm">
+    <input id="passengerName" placeholder="Passenger Name" required>
+    <input id="age" type="number" min="1" max="120" placeholder="Age" required>
+    <input id="phone" placeholder="Phone Number" required>
+    <input id="email" type="email" placeholder="Email" required>
+
+    <input id="from" placeholder="From" required>
+    <input id="to" placeholder="To" required>
+    <input id="date" type="date" required>
+
+    <button type="submit">Book Flight</button>
+  </form>
+
+  <p id="result"></p>
+
+  <a href="manage.html">Manage / Cancel Booking</a>
+</div>
+
+<script src="../js/passenger.js"></script>
+</body>
+</html>
