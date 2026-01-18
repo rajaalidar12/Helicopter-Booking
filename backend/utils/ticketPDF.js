@@ -1,83 +1,132 @@
-
-console.log("✅ QR PDF generator loaded");
-
+const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
-const PDFDocument = require("pdfkit");
 const QRCode = require("qrcode");
 
 module.exports = async function generateTicketPDF(booking) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const ticketsDir = path.join(__dirname, "../tickets");
-      if (!fs.existsSync(ticketsDir)) fs.mkdirSync(ticketsDir);
+  const ticketsDir = path.join(__dirname, "../tickets");
+  if (!fs.existsSync(ticketsDir)) {
+    fs.mkdirSync(ticketsDir);
+  }
 
-      const pdfPath = path.join(
-        ticketsDir,
-        `Ticket-${booking.ticketNumber}.pdf`
-      );
+  const pdfPath = path.join(
+    ticketsDir,
+    `Ticket-${booking.ticketNumber}.pdf`
+  );
 
-      const doc = new PDFDocument({ size: "A4", margin: 50 });
-      const stream = fs.createWriteStream(pdfPath);
-      doc.pipe(stream);
+  const doc = new PDFDocument({ size: "A4", margin: 40 });
+  doc.pipe(fs.createWriteStream(pdfPath));
 
-      /* ================= HEADER ================= */
-      doc
-        .fontSize(22)
-        .text("🚁 Kashmir Heli Services", { align: "center" })
-        .moveDown(0.5);
+  /* ================= BRAND HEADER ================= */
+  doc
+    .rect(0, 0, 595, 90)
+    .fill("#0A4D68");
 
-      doc
-        .fontSize(14)
-        .text("Official Helicopter Boarding Pass", { align: "center" })
-        .moveDown(2);
+  doc
+    .fillColor("#ffffff")
+    .fontSize(26)
+    .font("Helvetica-Bold")
+    .text("🚁 Kashmir Heli Services", 40, 30);
 
-      /* ================= TICKET DETAILS ================= */
-      doc.fontSize(12);
+  doc
+    .fontSize(11)
+    .font("Helvetica")
+    .text("Official Helicopter Boarding Pass", 40, 62);
 
-      doc.text(`Ticket Number: ${booking.ticketNumber}`);
-      doc.text(`Passenger Name: ${booking.passengerName}`);
-      doc.text(`Date of Travel: ${booking.date}`);
-      doc.text(`Route: ${booking.from} → ${booking.to}`);
-      doc.text(`Status: ${booking.status}`);
-      doc.moveDown();
+  doc.moveDown(3);
 
-      /* ================= QR DATA ================= */
-      const qrData = `
+  /* ================= TICKET INFO ================= */
+  doc
+    .fillColor("#000")
+    .fontSize(18)
+    .font("Helvetica-Bold")
+    .text("BOARDING PASS", { align: "center" });
+
+  doc.moveDown(1);
+
+  doc
+    .fontSize(14)
+    .fillColor("#088395")
+    .text(`Ticket Number: ${booking.ticketNumber}`, {
+      align: "center"
+    });
+
+  doc.moveDown(1.5);
+
+  /* ================= DETAILS BOX ================= */
+  const boxTop = doc.y;
+  doc
+    .roundedRect(40, boxTop, 515, 200, 10)
+    .stroke("#cccccc");
+
+  doc
+    .fontSize(12)
+    .fillColor("#000")
+    .font("Helvetica-Bold")
+    .text("Passenger Details", 60, boxTop + 15);
+
+  doc
+    .font("Helvetica")
+    .fontSize(11)
+    .text(`Name: ${booking.passengerName}`, 60, boxTop + 45)
+    .text(`Age: ${booking.age}`, 60, boxTop + 65)
+    .text(`Phone: ${booking.phone}`, 60, boxTop + 85)
+    .text(`Email: ${booking.email || "N/A"}`, 60, boxTop + 105);
+
+  doc
+    .font("Helvetica-Bold")
+    .text("Flight Details", 320, boxTop + 15);
+
+  doc
+    .font("Helvetica")
+    .text(`From: ${booking.from}`, 320, boxTop + 45)
+    .text(`To: ${booking.to}`, 320, boxTop + 65)
+    .text(`Date: ${booking.date}`, 320, boxTop + 85)
+    .text(`Status: ${booking.status}`, 320, boxTop + 105);
+
+  doc.moveDown(9);
+
+  /* ================= QR CODE ================= */
+  const qrData = `
 Ticket: ${booking.ticketNumber}
 Name: ${booking.passengerName}
 Date: ${booking.date}
-Route: ${booking.from} → ${booking.to}
-Verify: http://localhost:4000/passenger/booking/${booking.ticketNumber}
-      `;
+Route: ${booking.from} -> ${booking.to}
+`;
 
-      const qrImage = await QRCode.toDataURL(qrData);
+  const qrImage = await QRCode.toDataURL(qrData);
 
-      /* ================= QR CODE ================= */
-      doc
-        .fontSize(14)
-        .text("Scan QR Code for Ticket Verification", { align: "left" })
-        .moveDown(0.5);
+  doc
+    .roundedRect(200, doc.y, 200, 220, 10)
+    .stroke("#088395");
 
-      doc.image(qrImage, {
-        fit: [150, 150],
-        align: "left"
-      });
+  doc
+    .fontSize(12)
+    .font("Helvetica-Bold")
+    .fillColor("#088395")
+    .text("Scan for Verification", 200, doc.y + 10, {
+      width: 200,
+      align: "center"
+    });
 
-      /* ================= FOOTER ================= */
-      doc.moveDown(3);
-      doc
-        .fontSize(10)
-        .text(
-          "This is a system-generated ticket. Please carry valid ID proof during travel.",
-          { align: "center" }
-        );
-
-      doc.end();
-
-      stream.on("finish", () => resolve(pdfPath));
-    } catch (err) {
-      reject(err);
-    }
+  doc.image(qrImage, 225, doc.y + 40, {
+    fit: [150, 150]
   });
+
+  doc.moveDown(12);
+
+  /* ================= FOOTER ================= */
+  doc
+    .moveDown(2)
+    .fontSize(9)
+    .fillColor("#555")
+    .text(
+      "This is a system-generated ticket. Please carry a valid photo ID during boarding.\n" +
+      "For assistance, contact Kashmir Heli Services support.",
+      { align: "center" }
+    );
+
+  doc.end();
+
+  return pdfPath;
 };
