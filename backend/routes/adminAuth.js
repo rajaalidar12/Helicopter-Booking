@@ -9,7 +9,9 @@ const router = express.Router();
 /* ===============================
    ADMIN LOGIN (SECURE)
    =============================== */
-router.post("/login", async (req, res) => {
+const { adminLoginLimiter } = require("../middleware/rateLimiter");
+router.post("/login", adminLoginLimiter, async (req, res) => {
+
   try {
     const { username, password } = req.body;
 

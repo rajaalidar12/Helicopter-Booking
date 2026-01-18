@@ -4,6 +4,12 @@ const PassengerOTP = require("../models/PassengerOTP");
 
 const { sendOTPEmail } = require("../utils/emailSender");
 
+const {
+  otpSendLimiter,
+  otpVerifyLimiter
+} = require("../middleware/rateLimiter");
+
+
 
 
 const router = express.Router();
@@ -11,7 +17,8 @@ const router = express.Router();
 /* =============================
    SEND OTP (EMAIL OR PHONE)
    ============================= */
-router.post("/send-otp", async (req, res) => {
+
+router.post("/send-otp", otpSendLimiter, async (req, res) => {
   try {
     const { contact } = req.body;
 
@@ -55,7 +62,7 @@ router.post("/send-otp", async (req, res) => {
 /* =============================
    VERIFY OTP
    ============================= */
-router.post("/verify-otp", async (req, res) => {
+router.post("/verify-otp", otpVerifyLimiter, async (req, res) => {
   try {
     const { contact, otp } = req.body;
 
