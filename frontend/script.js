@@ -1,43 +1,23 @@
-document.getElementById("bookingForm").addEventListener("submit", async function (e) {
-  e.preventDefault();
+/*****************************************************************
+ * KASHMIR HELI SERVICES – FRONTEND SCRIPT
+ * Landing Page + Status + Destinations
+ *****************************************************************/
 
-  const form = e.target;
-  const formData = new FormData(form);
-
-  try {
-    const res = await fetch("http://localhost:4000/book", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      document.getElementById("result").innerHTML = `
-        ✅ Booking Successful!<br>
-        <b>Ticket Number:</b> ${data.ticketNumber}
-      `;
-      form.reset();
-    } else {
-      document.getElementById("result").innerText = "❌ " + data.message;
-    }
-
-  } catch (err) {
-    document.getElementById("result").innerText =
-      "❌ Server error. Please try again.";
-  }
-});
-/* ===============================
-   FLIGHT STATUS CHECK
-   =============================== */
+/* =====================================================
+   FLIGHT STATUS CHECK (INDEX PAGE)
+   ===================================================== */
 async function checkStatus() {
   const ticketInput = document.getElementById("statusTicket");
   const resultBox = document.getElementById("statusResult");
+  const cancelBtn = document.getElementById("cancelBtn");
+
+  if (!ticketInput || !resultBox) return;
 
   const ticketNumber = ticketInput.value.trim();
 
   if (!ticketNumber) {
     resultBox.innerHTML = "❌ Please enter a ticket number";
+    cancelBtn.style.display = "none";
     return;
   }
 
@@ -50,55 +30,41 @@ async function checkStatus() {
 
     if (!res.ok) {
       resultBox.innerHTML = "❌ Booking not found";
+      cancelBtn.style.display = "none";
       return;
     }
 
-   resultBox.innerHTML = `
-  <b>Passenger:</b> ${data.passengerName}<br>
-  <b>Date:</b> ${data.date}<br>
-  <b>Route:</b> ${data.from} → ${data.to}<br>
-  <b>Status:</b> ${data.status}
-`;
+    resultBox.innerHTML = `
+      <b>Passenger:</b> ${data.passengerName}<br>
+      <b>Date:</b> ${data.date}<br>
+      <b>Route:</b> ${data.from} → ${data.to}<br>
+      <b>Status:</b> ${data.status}
+    `;
 
-const cancelBtn = document.getElementById("cancelBtn");
-
-const modifySection = document.getElementById("modifySection");
-
-if (data.status === "CONFIRMED") {
-  cancelBtn.style.display = "block";
-  cancelBtn.setAttribute("data-ticket", ticketNumber);
-
-  modifySection.style.display = "block";
-  modifySection.setAttribute("data-ticket", ticketNumber);
-
-  document.getElementById("newDate").value = data.date;
-  document.getElementById("newPhone").value = data.phone || "";
-  document.getElementById("newEmail").value = data.email || "";
-
-} else {
-  cancelBtn.style.display = "none";
-  modifySection.style.display = "none";
-}
-
+    if (data.status === "CONFIRMED") {
+      cancelBtn.style.display = "block";
+      cancelBtn.setAttribute("data-ticket", ticketNumber);
+    } else {
+      cancelBtn.style.display = "none";
+    }
 
   } catch (err) {
-    resultBox.innerHTML =
-      "❌ Unable to fetch booking. Server error.";
+    console.error(err);
+    resultBox.innerHTML = "❌ Server error while fetching booking";
+    cancelBtn.style.display = "none";
   }
 }
 
-/* ===============================
-   CANCEL BOOKING (PASSENGER)
-   =============================== */
+/* =====================================================
+   CANCEL BOOKING (PASSENGER – INDEX PAGE)
+   ===================================================== */
 async function cancelBooking() {
   const cancelBtn = document.getElementById("cancelBtn");
   const ticket = cancelBtn.getAttribute("data-ticket");
 
   if (!ticket) return;
 
-  if (!confirm("Are you sure you want to cancel this booking?")) {
-    return;
-  }
+  if (!confirm("Are you sure you want to cancel this booking?")) return;
 
   try {
     const res = await fetch(
@@ -121,42 +87,93 @@ async function cancelBooking() {
   }
 }
 
-/* ===============================
-   MODIFY BOOKING (PASSENGER)
-   =============================== */
-async function modifyBooking() {
-  const modifySection = document.getElementById("modifySection");
-  const ticket = modifySection.getAttribute("data-ticket");
-
-  const newDate = document.getElementById("newDate").value;
-  const phone = document.getElementById("newPhone").value.trim();
-  const email = document.getElementById("newEmail").value.trim();
-
-  if (!newDate && !phone && !email) {
-    alert("Nothing to update");
-    return;
+/* =====================================================
+   DESTINATION DETAILS (MODAL)
+   ===================================================== */
+const destinations = {
+  gulmarg: {
+    title: "Gulmarg",
+    description:
+      "Gulmarg (Meadow of Flowers) is one of Asia’s most famous hill stations, known for skiing, snow sports, and the world’s highest cable car.",
+    highlights: [
+      "Gulmarg Gondola (Asia’s highest)",
+      "International skiing destination",
+      "Alpine meadows & pine forests",
+      "Winter snow paradise"
+    ]
+  },
+  sonamarg: {
+    title: "Sonamarg",
+    description:
+      "Sonamarg (Meadow of Gold) is a breathtaking valley with glaciers, rivers, and alpine beauty, serving as a gateway to Ladakh.",
+    highlights: [
+      "Thajiwas Glacier",
+      "Sindh River",
+      "Gateway to Ladakh",
+      "High-altitude trekking routes"
+    ]
+  },
+  pahalgam: {
+    title: "Pahalgam",
+    description:
+      "Pahalgam is a lush green valley on the banks of the Lidder River, famous for scenic views and Bollywood film locations.",
+    highlights: [
+      "Betaab Valley",
+      "Aru Valley",
+      "Horse riding & trekking",
+      "River rafting"
+    ]
+  },
+  dal: {
+    title: "Dal Lake",
+    description:
+      "Dal Lake is the heart of Srinagar, globally known for shikara rides, houseboats, floating gardens, and scenic sunsets.",
+    highlights: [
+      "Shikara rides",
+      "Houseboats",
+      "Floating markets",
+      "Golden sunset views"
+    ]
   }
+};
 
-  try {
-    const res = await fetch(
-      "http://localhost:4000/passenger/modify-booking/" + ticket,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newDate, phone, email })
-      }
-    );
+function openDestination(key) {
+  const modal = document.getElementById("destinationModal");
+  if (!modal || !destinations[key]) return;
 
-    const data = await res.json();
+  const dest = destinations[key];
 
-    if (res.ok) {
-      alert("✅ Booking updated successfully");
-      checkStatus(); // refresh view
-    } else {
-      alert(data.message || "Update failed");
-    }
+  document.getElementById("destTitle").innerText = dest.title;
+  document.getElementById("destDesc").innerText = dest.description;
 
-  } catch (err) {
-    alert("Server error while updating booking");
-  }
+  const list = document.getElementById("destList");
+  list.innerHTML = "";
+
+  dest.highlights.forEach(item => {
+    const li = document.createElement("li");
+    li.innerText = "✔ " + item;
+    list.appendChild(li);
+  });
+
+  modal.style.display = "block";
+}
+
+function closeDestination() {
+  const modal = document.getElementById("destinationModal");
+  if (modal) modal.style.display = "none";
+}
+
+/* =====================================================
+   NAVIGATION HELPERS
+   ===================================================== */
+function goPassenger() {
+  window.location.href = "passenger/login.html";
+}
+
+function goManage() {
+  window.location.href = "passenger/manage.html";
+}
+
+function goAdmin() {
+  window.location.href = "admin/login.html";
 }

@@ -2,120 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Kashmir Heli Services | Official Booking Portal</title>
+  <title>Kashmir Heli Services | Official Helicopter Booking Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- GOOGLE FONTS -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- MAIN STYLES -->
+  <!-- Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ===================== HERO ===================== -->
+<!-- ================= HERO ================= -->
 <header class="hero">
   <div class="hero-overlay"></div>
 
-  <nav class="top-nav">
-    <h1 class="brand">🚁 Kashmir Heli Services</h1>
-    <div class="nav-actions">
-      <button onclick="redirectPassenger()">Passenger Login</button>
-      <button class="admin-btn" onclick="redirectAdmin()">Admin Login</button>
+  <nav class="navbar">
+    <h1 class="logo">🚁 Kashmir Heli Services</h1>
+    <div class="nav-buttons">
+      <button onclick="goPassenger()">Passenger Login</button>
+      <button class="admin-btn" onclick="goAdmin()">Admin Login</button>
     </div>
   </nav>
 
   <div class="hero-content">
     <h2>Fast • Safe • Scenic Helicopter Travel</h2>
     <p>
-      Official online booking portal for helicopter services across
-      Kashmir. Secure OTP login, real-time seat availability,
-      PDF tickets & email confirmation.
+      Official helicopter booking portal for Jammu & Kashmir.
+      OTP-secured login, real-time seat availability, PDF tickets & email confirmation.
     </p>
 
-    <div class="hero-buttons">
-      <button class="primary-btn" onclick="redirectPassenger()">
-        ✈️ Book Flight
-      </button>
-      <button class="secondary-btn" onclick="redirectManage()">
-        🔍 Manage Booking
-      </button>
+    <div class="hero-actions">
+      <button class="primary" onclick="goPassenger()">✈️ Book Flight</button>
+      <button class="secondary" onclick="goManage()">📄 Manage Booking</button>
     </div>
   </div>
 </header>
 
-<!-- ===================== TRUST STRIP ===================== -->
-<section class="trust-strip">
-  <div>🔐 OTP-secured login</div>
-  <div>📄 PDF ticket & email confirmation</div>
-  <div>🧑‍✈️ Admin-controlled seat quota</div>
-  <div>🏔️ Scenic government-backed service</div>
+<!-- ================= TRUST STRIP ================= -->
+<section class="trust">
+  <div>🔐 OTP Secured</div>
+  <div>📄 PDF Ticket</div>
+  <div>📧 Email Confirmation</div>
+  
 </section>
 
-<!-- ===================== QUICK ACTIONS ===================== -->
-<section class="actions">
-  <div class="action-card" onclick="redirectPassenger()">
-    <h3>🚁 Book Flight</h3>
-    <p>Login via OTP and book helicopter tickets instantly</p>
-  </div>
-
-  <div class="action-card" onclick="redirectManage()">
-    <h3>📄 Manage Booking</h3>
-    <p>View, download PDF, modify or cancel bookings</p>
-  </div>
-
-  <div class="action-card" onclick="redirectAdmin()">
-    <h3>🛂 Admin Portal</h3>
-    <p>Quota management, reports & booking control</p>
-  </div>
-
-  <div class="action-card" onclick="scrollToDestinations()">
-    <h3>🏔️ Destinations</h3>
-    <p>Explore Kashmir’s top tourist destinations</p>
-  </div>
-</section>
-
-<!-- ===================== DESTINATIONS ===================== -->
-<section class="destinations" id="destinations">
-  <h2>🏔️ Popular Destinations</h2>
+<!-- ================= DESTINATIONS ================= -->
+<section class="destinations">
+  <h2>🏔️ Popular Tourist Destinations</h2>
 
   <div class="destination-grid">
-    <div class="destination">Gulmarg</div>
-    <div class="destination">Sonamarg</div>
-    <div class="destination">Pahalgam</div>
-    <div class="destination">Gurez Valley</div>
-    <div class="destination">Bangus Valley</div>
-    <div class="destination">Yusmarg</div>
-    <div class="destination">Doodhpathri</div>
-    <div class="destination">Verinag</div>
+
+    <!-- ROW AUTO-WRAPS -->
+    <button class="dest-btn" onclick="openDestination('gulmarg')">Gulmarg</button>
+    <button class="dest-btn" onclick="openDestination('sonamarg')">Sonamarg</button>
+    <button class="dest-btn" onclick="openDestination('pahalgam')">Pahalgam</button>
+    <button class="dest-btn" onclick="openDestination('dal')">Dal Lake</button>
+    <button class="dest-btn" onclick="openDestination('gurez')">Gurez Valley</button>
+    <button class="dest-btn" onclick="openDestination('yusmarg')">Yusmarg</button>
+    <button class="dest-btn" onclick="openDestination('doodhpathri')">Doodhpathri</button>
+    <button class="dest-btn" onclick="openDestination('bangus')">Bangus Valley</button>
+    <button class="dest-btn" onclick="openDestination('aharbal')">Aharbal Waterfall</button>
+    <button class="dest-btn" onclick="openDestination('verinag')">Verinag</button>
+    <button class="dest-btn" onclick="openDestination('kokernag')">Kokernag</button>
+    <button class="dest-btn" onclick="openDestination('manasbal')">Manasbal Lake</button>
+    <button class="dest-btn" onclick="openDestination('wular')">Wular Lake</button>
+    <button class="dest-btn" onclick="openDestination('tosamaidan')">Tosa Maidan</button>
+    <button class="dest-btn" onclick="openDestination('naranag')">Naranag</button>
+    <button class="dest-btn" onclick="openDestination('aru')">Aru Valley</button>
+    <button class="dest-btn" onclick="openDestination('betaab')">Betaab Valley</button>
+
   </div>
 </section>
 
-<!-- ===================== FOOTER ===================== -->
+<!-- ================= DESTINATION MODAL ================= -->
+<div id="destinationModal" class="modal">
+  <div class="modal-box small">
+    <span class="close" onclick="closeDestination()">&times;</span>
+    <h2 id="destTitle"></h2>
+    <p id="destDesc"></p>
+    <ul id="destList"></ul>
+    <button class="primary" onclick="goPassenger()">🚁 Book Helicopter</button>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
 <footer class="footer">
   <p>
-    © 2026 Kashmir Heli Services. All rights reserved.<br>
-    This is an official helicopter booking portal.
+    © 2026 Kashmir Heli Services<br>
+    Official helicopter booking platform designed and developed by Raja Ali
   </p>
 </footer>
 
-<!-- ===================== JS ===================== -->
+<!-- ================= SCRIPT ================= -->
 <script>
-  function redirectPassenger() {
-    window.location.href = "passenger/login.html";
-  }
+function goPassenger() {
+  window.location.href = "passenger/login.html";
+}
+function goManage() {
+  window.location.href = "passenger/manage.html";
+}
+function goAdmin() {
+  window.location.href = "admin/login.html";
+}
 
-  function redirectManage() {
-    window.location.href = "passenger/manage.html";
-  }
+/* DESTINATION DATA */
+const destinations = {
+  gulmarg: { title: "Gulmarg", desc: "World-famous ski resort and gondola destination.", list: ["Skiing", "Gondola", "Snow sports"] },
+  sonamarg: { title: "Sonamarg", desc: "High-altitude valley and gateway to Ladakh.", list: ["Thajiwas Glacier", "Mountain views"] },
+  pahalgam: { title: "Pahalgam", desc: "Lidder valley, base of Amarnath Yatra.", list: ["Aru Valley", "River Lidder"] },
+  dal: { title: "Dal Lake", desc: "Iconic lake with shikaras and houseboats.", list: ["Shikara rides", "Floating gardens"] },
+  gurez: { title: "Gurez Valley", desc: "Remote valley near LOC with pristine beauty.", list: ["Kishanganga River", "Dard culture"] },
+  yusmarg: { title: "Yusmarg", desc: "Peaceful meadow surrounded by forests.", list: ["Meadows", "Hiking"] },
+  doodhpathri: { title: "Doodhpathri", desc: "Lush green valley with milky streams.", list: ["Grasslands", "Streams"] },
+  bangus: { title: "Bangus Valley", desc: "Untouched alpine valley in Kupwara.", list: ["Wildflowers", "Silence"] },
+  aharbal: { title: "Aharbal Waterfall", desc: "Niagara of Kashmir.", list: ["Waterfall", "Photography"] },
+  verinag: { title: "Verinag", desc: "Source of Jhelum river.", list: ["Mughal garden"] },
+  kokernag: { title: "Kokernag", desc: "Freshwater springs and gardens.", list: ["Springs", "Gardens"] },
+  manasbal: { title: "Manasbal Lake", desc: "Deepest lake of Kashmir.", list: ["Lotus flowers"] },
+  wular: { title: "Wular Lake", desc: "Largest freshwater lake in India.", list: ["Bird watching"] },
+  tosamaidan: { title: "Tosa Maidan", desc: "High-altitude meadow.", list: ["Camping"] },
+  naranag: { title: "Naranag", desc: "Ancient ruins & trekking base.", list: ["Temples"] },
+  aru: { title: "Aru Valley", desc: "Base camp for treks.", list: ["Trekking"] },
+  betaab: { title: "Betaab Valley", desc: "Film shooting location.", list: ["Photography"] }
+};
 
-  function redirectAdmin() {
-    window.location.href = "admin/login.html";
-  }
+function openDestination(key) {
+  const d = destinations[key];
+  document.getElementById("destTitle").innerText = d.title;
+  document.getElementById("destDesc").innerText = d.desc;
 
-  function scrollToDestinations() {
-    document.getElementById("destinations").scrollIntoView({ behavior: "smooth" });
-  }
+  const ul = document.getElementById("destList");
+  ul.innerHTML = "";
+  d.list.forEach(i => {
+    const li = document.createElement("li");
+    li.innerText = "✔ " + i;
+    ul.appendChild(li);
+  });
+
+  document.getElementById("destinationModal").style.display = "flex";
+}
+
+function closeDestination() {
+  document.getElementById("destinationModal").style.display = "none";
+}
 </script>
 
 </body>
