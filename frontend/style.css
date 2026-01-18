@@ -254,3 +254,66 @@ body {
     background-position: 0 100vh;
   }
 }
+
+/* ================= TRUST STRIP ================= */
+
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 30px 60px;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.92),
+    rgba(240, 248, 255, 0.95)
+  );
+  border-top: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  animation: fadeUp 1s ease-in-out;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trust-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.12);
+}
+
+.trust-icon {
+  font-size: 34px;
+}
+
+.trust-item h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0a3d62;
+}
+
+.trust-item p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #555;
+}
+
+/* ================= TRUST STRIP ANIMATION ================= */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

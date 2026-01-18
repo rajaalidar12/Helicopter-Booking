@@ -17,13 +17,21 @@ module.exports = async function generateTicketPDF(booking) {
   const doc = new PDFDocument({ size: "A4", margin: 40 });
   doc.pipe(fs.createWriteStream(pdfPath));
 
-  /* ================= BRAND HEADER ================= */
-  doc
-    .rect(0, 0, 595, 90)
-    .fill("#0A4D68");
+  /* ================= CALCULATIONS ================= */
+  const seatNumber = "SEAT-" + booking.ticketNumber.slice(-2);
+
+  const flightDate = new Date(booking.date);
+  const boardingTime = new Date(flightDate.getTime() - 30 * 60000);
+  const boardingTimeStr = boardingTime.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  /* ================= HEADER ================= */
+  doc.rect(0, 0, 595, 90).fill("#0A4D68");
 
   doc
-    .fillColor("#ffffff")
+    .fillColor("#fff")
     .fontSize(26)
     .font("Helvetica-Bold")
     .text("🚁 Kashmir Heli Services", 40, 30);
@@ -35,14 +43,14 @@ module.exports = async function generateTicketPDF(booking) {
 
   doc.moveDown(3);
 
-  /* ================= TICKET INFO ================= */
+  /* ================= TITLE ================= */
   doc
     .fillColor("#000")
     .fontSize(18)
     .font("Helvetica-Bold")
     .text("BOARDING PASS", { align: "center" });
 
-  doc.moveDown(1);
+  doc.moveDown(0.5);
 
   doc
     .fontSize(14)
@@ -55,14 +63,16 @@ module.exports = async function generateTicketPDF(booking) {
 
   /* ================= DETAILS BOX ================= */
   const boxTop = doc.y;
-  doc
-    .roundedRect(40, boxTop, 515, 200, 10)
-    .stroke("#cccccc");
 
   doc
+    .roundedRect(40, boxTop, 515, 230, 10)
+    .stroke("#cccccc");
+
+  /* LEFT COLUMN */
+  doc
+    .font("Helvetica-Bold")
     .fontSize(12)
     .fillColor("#000")
-    .font("Helvetica-Bold")
     .text("Passenger Details", 60, boxTop + 15);
 
   doc
@@ -71,8 +81,10 @@ module.exports = async function generateTicketPDF(booking) {
     .text(`Name: ${booking.passengerName}`, 60, boxTop + 45)
     .text(`Age: ${booking.age}`, 60, boxTop + 65)
     .text(`Phone: ${booking.phone}`, 60, boxTop + 85)
-    .text(`Email: ${booking.email || "N/A"}`, 60, boxTop + 105);
+    .text(`Email: ${booking.email || "N/A"}`, 60, boxTop + 105)
+    .text(`Seat Number: ${seatNumber}`, 60, boxTop + 125);
 
+  /* RIGHT COLUMN */
   doc
     .font("Helvetica-Bold")
     .text("Flight Details", 320, boxTop + 15);
@@ -82,7 +94,8 @@ module.exports = async function generateTicketPDF(booking) {
     .text(`From: ${booking.from}`, 320, boxTop + 45)
     .text(`To: ${booking.to}`, 320, boxTop + 65)
     .text(`Date: ${booking.date}`, 320, boxTop + 85)
-    .text(`Status: ${booking.status}`, 320, boxTop + 105);
+    .text(`Boarding Time: ${boardingTimeStr}`, 320, boxTop + 105)
+    .text(`Status: ${booking.status}`, 320, boxTop + 125);
 
   doc.moveDown(9);
 
@@ -90,7 +103,8 @@ module.exports = async function generateTicketPDF(booking) {
   const qrData = `
 Ticket: ${booking.ticketNumber}
 Name: ${booking.passengerName}
-Date: ${booking.date}
+Seat: ${seatNumber}
+Boarding: ${boardingTimeStr}
 Route: ${booking.from} -> ${booking.to}
 `;
 
@@ -104,7 +118,7 @@ Route: ${booking.from} -> ${booking.to}
     .fontSize(12)
     .font("Helvetica-Bold")
     .fillColor("#088395")
-    .text("Scan for Verification", 200, doc.y + 10, {
+    .text("Scan at Boarding Gate", 200, doc.y + 10, {
       width: 200,
       align: "center"
     });
@@ -117,12 +131,12 @@ Route: ${booking.from} -> ${booking.to}
 
   /* ================= FOOTER ================= */
   doc
-    .moveDown(2)
     .fontSize(9)
     .fillColor("#555")
     .text(
-      "This is a system-generated ticket. Please carry a valid photo ID during boarding.\n" +
-      "For assistance, contact Kashmir Heli Services support.",
+      "Please report at helipad at least 30 minutes before boarding time.\n" +
+      "Carry a valid photo ID for verification.\n" +
+      "This is a system-generated ticket.",
       { align: "center" }
     );
 
