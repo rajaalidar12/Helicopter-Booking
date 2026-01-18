@@ -361,3 +361,14 @@ body {
   letter-spacing: 0.5px;
   color: #f1f1f1;
 }
+
+.district-tag {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0b5ed7;
+  background: #e8f1ff;
+  padding: 6px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 10px;
+}

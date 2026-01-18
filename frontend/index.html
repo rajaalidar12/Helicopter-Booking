@@ -127,6 +127,7 @@
   <div class="modal-box small">
     <span class="close" onclick="closeDestination()">&times;</span>
     <h2 id="destTitle"></h2>
+    <p id="destDistrict" class="district-tag"></p>
     <p id="destDesc"></p>
     <ul id="destList"></ul>
     <button class="primary" onclick="goPassenger()">🚁 Book Helicopter</button>
@@ -181,258 +182,278 @@ function animateCounter(id, target) {
 
 loadStats();
 
-/* ---------- DESTINATIONS : DETAILED TO-DO ---------- */
+
+
+
+/* ---------- DESTINATIONS : WITH DISTRICT INFO ---------- */
 const destinations = {
 
   gulmarg: {
     title: "Gulmarg",
+    district: "Baramulla",
     desc: "Gulmarg (Meadow of Flowers) is Kashmir’s premier hill station, globally renowned for skiing, alpine scenery, and the highest cable car in Asia.",
     list: [
-      "Gulmarg Gondola (Phase I & II – Asia’s highest cable car)",
-      "Skiing & snowboarding (winter season)",
+      "Gulmarg Gondola (Asia’s highest cable car)",
+      "Skiing & snowboarding (winter)",
       "Snow biking & sledging",
-      "Golfing at world’s highest golf course (summer)",
+      "World’s highest golf course (summer)",
       "Khilanmarg meadow excursion",
-      "Photography of alpine landscapes",
       "Trekking to Alpather Lake",
-      "Winter festivals & snow events"
+      "Alpine photography",
+      "Winter festivals"
     ]
   },
 
   sonamarg: {
     title: "Sonamarg",
+    district: "Ganderbal",
     desc: "Sonamarg, the Meadow of Gold, is a high-altitude valley surrounded by glaciers and towering peaks, serving as the gateway to Ladakh.",
     list: [
       "Thajiwas Glacier trek",
       "Horse riding through meadows",
-      "Sindh River sightseeing & trout fishing",
+      "Sindh River sightseeing",
       "Baltal Valley visit",
       "Camping near glaciers",
       "Photography of snow-fed valleys",
       "Short alpine treks",
-      "Base point for Zoji La & Ladakh route"
+      "Gateway to Ladakh route"
     ]
   },
 
   pahalgam: {
     title: "Pahalgam",
+    district: "Anantnag",
     desc: "Pahalgam is a serene riverside town in Lidder Valley, famous for lush meadows, pine forests, and pilgrimage routes.",
     list: [
-      "Betaab Valley visit",
-      "Aru Valley sightseeing",
+      "Betaab Valley",
+      "Aru Valley",
       "Baisaran (Mini Switzerland)",
-      "River Lidder walks & photography",
-      "Horse riding & pony trails",
+      "River Lidder walks",
+      "Horse riding",
       "Amarnath Yatra base camp",
-      "Local market shopping",
-      "Nature camping & picnics"
+      "Nature camping",
+      "Local sightseeing"
     ]
   },
 
   dal: {
     title: "Dal Lake",
-    desc: "Dal Lake is the iconic heart of Srinagar, known for its floating gardens, houseboats, and traditional shikara rides.",
+    district: "Srinagar",
+    desc: "Dal Lake is the iconic heart of Srinagar, known for floating gardens, houseboats, and traditional shikara rides.",
     list: [
-      "Shikara ride at sunrise & sunset",
-      "Stay in traditional houseboats",
-      "Floating vegetable market visit",
+      "Shikara rides",
+      "Houseboat stays",
+      "Floating vegetable market",
+      "Char Chinar island",
       "Lakefront photography",
-      "Char Chinar island visit",
-      "Evening reflections of Zabarwan hills",
-      "Local handicraft shopping",
-      "Cultural experiences on water"
+      "Cultural experiences",
+      "Sunset views",
+      "Local handicraft shopping"
     ]
   },
 
   gurez: {
     title: "Gurez Valley",
+    district: "Bandipora",
     desc: "Gurez Valley is a remote Himalayan paradise near the Line of Control, known for untouched beauty and Dard-Shina culture.",
     list: [
-      "Kishanganga River views",
-      "Habba Khatoon Peak sightseeing",
-      "Local Dard tribe cultural experience",
-      "Photography of wooden houses",
-      "Peaceful nature walks",
-      "Stargazing at night",
-      "Offbeat tourism exploration",
-      "Eco-tourism & homestays"
+      "Kishanganga River",
+      "Habba Khatoon Peak",
+      "Dard tribe culture",
+      "Wooden village houses",
+      "Nature walks",
+      "Stargazing",
+      "Eco-tourism",
+      "Offbeat travel"
     ]
   },
 
   yusmarg: {
     title: "Yusmarg",
-    desc: "Yusmarg is a tranquil meadow surrounded by dense pine forests, ideal for solitude seekers and nature lovers.",
+    district: "Budgam",
+    desc: "Yusmarg is a tranquil meadow surrounded by pine forests, ideal for peaceful retreats.",
     list: [
-      "Long meadow walks",
-      "Doodhganga River views",
-      "Short forest hikes",
+      "Meadow walks",
+      "Doodhganga River",
+      "Forest hikes",
       "Horse riding",
-      "Photography & bird watching",
-      "Picnics in open grasslands",
-      "Day camping",
-      "Nature meditation"
+      "Bird watching",
+      "Photography",
+      "Picnics",
+      "Meditation & relaxation"
     ]
   },
 
   doodhpathri: {
     title: "Doodhpathri",
-    desc: "Doodhpathri is a lush green valley known for its milky white streams flowing through expansive grasslands.",
+    district: "Budgam",
+    desc: "Doodhpathri is a lush green valley known for its milky streams flowing through expansive grasslands.",
     list: [
-      "Grassland walks",
-      "Photography of milky streams",
-      "Picnics with family",
+      "Grassland exploration",
+      "Milky stream photography",
+      "Picnics",
       "Horse riding",
       "Light trekking",
       "Nature relaxation",
-      "Ideal summer escape",
-      "Scenic day trips"
+      "Summer retreats",
+      "Day trips"
     ]
   },
 
   bangus: {
     title: "Bangus Valley",
-    desc: "Bangus Valley is one of Kashmir’s most untouched alpine meadows, offering pristine silence and raw natural beauty.",
+    district: "Kupwara",
+    desc: "Bangus Valley is one of Kashmir’s most untouched alpine meadows, offering pristine silence and raw beauty.",
     list: [
-      "Explore upper & lower Bangus meadows",
-      "Wildflower photography (summer)",
+      "Upper & Lower Bangus meadows",
+      "Wildflower photography",
       "Bird watching",
-      "Camping in open meadows",
+      "Camping",
       "Nature walks",
-      "Offbeat adventure travel",
+      "Offbeat adventure",
       "Landscape photography",
-      "Silence tourism experience"
+      "Eco-tourism"
     ]
   },
 
   aharbal: {
     title: "Aharbal Waterfall",
+    district: "Kulgam",
     desc: "Aharbal Waterfall, often called the Niagara of Kashmir, is a powerful cascade on the Veshaw River.",
     list: [
-      "Waterfall viewpoint photography",
-      "Nature walks around gorge",
+      "Waterfall viewpoints",
+      "Nature walks",
+      "Photography",
       "Picnic spots",
       "River-side relaxation",
+      "Monsoon sightseeing",
       "Short treks",
-      "Monsoon scenic visits",
-      "Drone photography (where permitted)",
-      "Local sightseeing"
+      "Scenic exploration"
     ]
   },
 
   verinag: {
     title: "Verinag",
-    desc: "Verinag is the historic source of the Jhelum River, surrounded by Mughal-era gardens and architecture.",
+    district: "Anantnag",
+    desc: "Verinag is the historic source of the Jhelum River, surrounded by Mughal-era gardens.",
     list: [
-      "Visit Jhelum source spring",
-      "Mughal garden exploration",
-      "Architectural photography",
-      "Historical sightseeing",
-      "Quiet nature walks",
-      "Picnic in gardens",
-      "Educational tours",
-      "Cultural heritage exploration"
+      "Jhelum River source",
+      "Mughal garden",
+      "Historical architecture",
+      "Photography",
+      "Nature walks",
+      "Picnics",
+      "Cultural heritage",
+      "Educational tours"
     ]
   },
 
   kokernag: {
     title: "Kokernag",
-    desc: "Kokernag is famous for its freshwater springs, botanical gardens, and relaxing ambiance.",
+    district: "Anantnag",
+    desc: "Kokernag is famous for freshwater springs, gardens, and relaxing surroundings.",
     list: [
-      "Spring garden visits",
-      "Botanical garden walk",
+      "Spring gardens",
+      "Botanical park",
       "Family picnics",
       "Nature photography",
-      "Health tourism (fresh water springs)",
+      "Health tourism",
       "Quiet retreats",
-      "Local fruit orchards",
+      "Fruit orchards",
       "Relaxation tourism"
     ]
   },
 
   manasbal: {
     title: "Manasbal Lake",
-    desc: "Manasbal is the deepest lake in Kashmir, famous for lotus blooms and calm surroundings.",
+    district: "Ganderbal",
+    desc: "Manasbal is the deepest lake in Kashmir, famous for lotus blooms and serene surroundings.",
     list: [
-      "Lotus garden photography (summer)",
-      "Lakeside walks",
+      "Lotus gardens",
       "Bird watching",
-      "Boating (seasonal)",
-      "Sunrise & sunset views",
-      "Nature study tours",
-      "Peaceful picnics",
-      "Landscape photography"
+      "Boating",
+      "Sunrise views",
+      "Nature walks",
+      "Photography",
+      "Educational tours",
+      "Peaceful picnics"
     ]
   },
 
   wular: {
     title: "Wular Lake",
-    desc: "Wular Lake is one of Asia’s largest freshwater lakes, playing a vital ecological role in Kashmir.",
+    district: "Bandipora",
+    desc: "Wular Lake is one of Asia’s largest freshwater lakes and a major wetland ecosystem.",
     list: [
-      "Bird watching (migratory birds)",
+      "Migratory bird watching",
       "Wetland photography",
-      "Boat rides (seasonal)",
-      "Nature conservation tours",
+      "Boat rides",
       "Sunset views",
-      "Fishermen village visits",
-      "Eco-tourism activities",
-      "Educational tours"
+      "Fishing villages",
+      "Eco-tourism",
+      "Nature education",
+      "Conservation tours"
     ]
   },
 
   tosamaidan: {
     title: "Tosa Maidan",
-    desc: "Tosa Maidan is a vast high-altitude meadow surrounded by snow peaks, ideal for camping and open exploration.",
+    district: "Budgam",
+    desc: "Tosa Maidan is a vast high-altitude meadow surrounded by snow peaks.",
     list: [
-      "Camping under open skies",
+      "Camping",
       "Star gazing",
       "High-altitude trekking",
-      "Photography of endless meadows",
+      "Meadow photography",
       "Nature exploration",
       "Adventure picnics",
-      "Drone shots (where allowed)",
-      "Offbeat travel experience"
+      "Offbeat tourism",
+      "Landscape views"
     ]
   },
 
   naranag: {
     title: "Naranag",
-    desc: "Naranag is an ancient temple complex and the base camp for high-altitude treks in Kashmir.",
+    district: "Ganderbal",
+    desc: "Naranag is an ancient temple complex and base camp for alpine treks.",
     list: [
-      "Ancient stone temple ruins",
-      "Trek to Gangbal Lake",
-      "Mount Harmukh base trek",
+      "Ancient temple ruins",
+      "Gangbal Lake trek",
+      "Mount Harmukh trek",
       "Heritage photography",
-      "Nature walks",
-      "Religious tourism",
       "Camping",
-      "Adventure trekking"
+      "Religious tourism",
+      "Adventure trekking",
+      "Nature walks"
     ]
   },
 
   aru: {
     title: "Aru Valley",
-    desc: "Aru Valley is a picturesque village and a major base camp for trekking routes in Kashmir.",
+    district: "Anantnag",
+    desc: "Aru Valley is a scenic village and major base camp for trekking routes.",
     list: [
-      "Trekking base camp activities",
+      "Trekking base camp",
       "Horse riding",
-      "Photography of valley landscapes",
       "Camping",
-      "Snow activities (winter)",
+      "Snow activities",
       "Village tourism",
-      "Peaceful nature stays",
-      "Short mountain hikes"
+      "Photography",
+      "Nature stays",
+      "Mountain hikes"
     ]
   },
 
   betaab: {
     title: "Betaab Valley",
-    desc: "Betaab Valley is a lush cinematic valley named after a Bollywood movie, surrounded by snow peaks and rivers.",
+    district: "Anantnag",
+    desc: "Betaab Valley is a lush cinematic valley surrounded by snow peaks and rivers.",
     list: [
-      "Scenic photography",
+      "Film shooting locations",
+      "Photography",
       "River-side walks",
       "Picnic spots",
-      "Film location visits",
-      "Family-friendly sightseeing",
+      "Family sightseeing",
       "Nature relaxation",
       "Short hikes",
       "Landscape videography"
@@ -442,9 +463,15 @@ const destinations = {
 };
 
 
+
+
+
+
 function openDestination(key){
   const d=destinations[key];
   document.getElementById("destTitle").innerText=d.title;
+   document.getElementById("destDistrict").innerText =
+    "📍 District: " + d.district;
   document.getElementById("destDesc").innerText=d.desc;
   const ul=document.getElementById("destList");
   ul.innerHTML="";

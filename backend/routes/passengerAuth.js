@@ -68,11 +68,15 @@ router.post("/verify-otp", async (req, res) => {
     // OTP can be used only once
     await PassengerOTP.deleteMany({ contact });
 
+
+    
+
     const token = jwt.sign(
-      { contact, role: "PASSENGER" },
-      "PASSENGER_SECRET",
-      { expiresIn: "2h" }
-    );
+  { contact, role: "PASSENGER" },
+  process.env.JWT_PASSENGER_SECRET,
+  { expiresIn: "2h" }
+);
+
 
     res.json({
       message: "OTP verified successfully",
