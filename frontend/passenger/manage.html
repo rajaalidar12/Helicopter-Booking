@@ -3,17 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <title>Kashmir Heli Services | Manage Booking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" href="../css/passenger.css">
 </head>
 <body>
 
 <div class="container">
-  <h1>🔍 Manage Booking</h1>
 
-  <input id="ticketNumber" placeholder="Enter Ticket Number">
-  <button onclick="loadBooking()">View Booking</button>
+  <h1>🔍 Manage Your Booking</h1>
+  <p class="subtitle">View booking details or download your ticket PDF</p>
 
-  <div id="bookingDetails"></div>
+  <!-- TICKET INPUT -->
+  <div class="form-group">
+    <input
+      id="ticketNumber"
+      type="text"
+      placeholder="Enter Ticket Number (HC-XXXXXX)"
+    >
+    <button onclick="loadBooking()">View Booking</button>
+  </div>
+
+  <!-- BOOKING DETAILS -->
+  <div id="bookingDetails" class="booking-details"></div>
+
+  <!-- DOWNLOAD BUTTON (HIDDEN INITIALLY) -->
+  <button
+    id="downloadBtn"
+    class="download-btn"
+    style="display:none;"
+    onclick="downloadTicket()"
+  >
+    📄 Download Ticket PDF
+  </button>
+
+  <!-- BACK / LOGOUT -->
+  <div style="margin-top: 20px;">
+    <a href="book.html">← Back to Booking</a> |
+    <a href="#" onclick="passengerLogout()">Logout</a>
+  </div>
+
 </div>
 
 <script src="../js/passenger.js"></script>

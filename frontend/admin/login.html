@@ -3,21 +3,161 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin Login | Kashmir Heli Services</title>
-  <link rel="stylesheet" href="../css/admin.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-card {
+      background: rgba(255,255,255,0.96);
+      padding: 40px;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+      animation: fadeIn 0.7s ease;
+    }
+
+    .login-card h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #8b0000;
+    }
+
+    .login-card p {
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .captcha-box {
+      background: #f2f2f2;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .login-card button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+      background: #8b0000;
+      color: #fff;
+      transition: all 0.3s;
+    }
+
+    .login-card button:hover {
+      box-shadow: 0 8px 20px rgba(139,0,0,0.5);
+      transform: translateY(-2px);
+    }
+
+    .msg {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="login-container">
-  <h2>Admin Login</h2>
+<div class="login-card">
+  <h2>🛂 Admin Login</h2>
+  <p>Restricted access – Authorized personnel only</p>
 
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
+  <input id="username" placeholder="Admin Username">
+  <input id="password" type="password" placeholder="Password">
 
-  <button onclick="adminLogin()">Login</button>
+  <!-- CAPTCHA -->
+  <div class="captcha-box">
+    Solve: <span id="captchaQuestion"></span>
+  </div>
 
-  <p id="loginMsg"></p>
+  <input id="captchaAnswer" placeholder="Enter CAPTCHA answer">
+
+  <button onclick="adminLogin()">🔐 Login</button>
+
+  <p id="msg" class="msg"></p>
 </div>
 
-<script src="../js/admin.js"></script>
+<script>
+/* ================= CAPTCHA ================= */
+let captchaResult = 0;
+
+function generateCaptcha() {
+  const a = Math.floor(Math.random() * 10) + 1;
+  const b = Math.floor(Math.random() * 10) + 1;
+  captchaResult = a + b;
+  document.getElementById("captchaQuestion").innerText =
+    `${a} + ${b} = ?`;
+}
+
+generateCaptcha();
+
+/* ================= ADMIN LOGIN ================= */
+async function adminLogin() {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const captcha = Number(document.getElementById("captchaAnswer").value);
+  const msg = document.getElementById("msg");
+
+  if (!username || !password) {
+    msg.innerText = "❌ Enter username and password";
+    return;
+  }
+
+  if (captcha !== captchaResult) {
+    msg.innerText = "❌ CAPTCHA incorrect";
+    generateCaptcha();
+    return;
+  }
+
+  msg.innerText = "🔐 Authenticating...";
+
+  try {
+    const res = await fetch("http://localhost:4000/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem("adminToken", data.token);
+      window.location.href = "dashboard.html";
+    } else {
+      msg.innerText = "❌ " + data.message;
+      generateCaptcha();
+    }
+
+  } catch {
+    msg.innerText = "❌ Server error";
+    generateCaptcha();
+  }
+}
+</script>
+
 </body>
 </html>

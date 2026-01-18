@@ -1,208 +1,300 @@
-/* RESET */
-body {
+/* ======================================================
+   GLOBAL RESET & BASE
+   ====================================================== */
+* {
   margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  overflow: hidden;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
 }
 
-/* SKY */
+body {
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #87ceeb, #e6f6ff);
+}
+
+/* ======================================================
+   SKY & CLOUDS
+   ====================================================== */
 .sky {
   position: fixed;
   inset: 0;
-  background: linear-gradient(to bottom, #7ec8ff, #cceeff, #ffffff);
-  z-index: -3;
+  z-index: -2;
 }
 
 .clouds {
   position: absolute;
-  width: 200%;
-  height: 40%;
-  opacity: 0.5;
-  background-repeat: repeat-x;
-  animation: cloudsMove 80s linear infinite;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50px;
+  opacity: 0.8;
+  animation: moveClouds linear infinite;
 }
 
-.cloud1 { top: 10%; }
-.cloud2 { top: 35%; animation-duration: 120s; }
-.cloud3 { top: 60%; animation-duration: 160s; }
+.cloud1 {
+  width: 180px;
+  height: 60px;
+  top: 20%;
+  left: -200px;
+  animation-duration: 60s;
+}
 
-@keyframes cloudsMove {
+.cloud2 {
+  width: 250px;
+  height: 80px;
+  top: 45%;
+  left: -300px;
+  animation-duration: 90s;
+}
+
+.cloud3 {
+  width: 200px;
+  height: 65px;
+  top: 70%;
+  left: -250px;
+  animation-duration: 75s;
+}
+
+@keyframes moveClouds {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to { transform: translateX(140vw); }
 }
 
-/* HELICOPTER */
+/* ======================================================
+   HELICOPTER ANIMATION
+   ====================================================== */
 .helicopter {
   position: fixed;
-  top: 90px;
-  left: -80px;
-  font-size: 48px;
-  animation: fly 18s linear infinite, hover 2s ease-in-out infinite;
-  z-index: -1;
-}
-
-@keyframes fly {
-  from { left: -80px; }
-  to { left: 110%; }
+  top: 12%;
+  right: 8%;
+  font-size: 70px;
+  animation: hover 3s ease-in-out infinite;
+  z-index: 2;
 }
 
 @keyframes hover {
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
 }
 
-/* LAYOUT */
+/* ======================================================
+   APP LAYOUT
+   ====================================================== */
 .app {
   display: flex;
   height: 100vh;
 }
 
-/* SIDEBAR */
+/* ================= SIDEBAR ================= */
 .sidebar {
   width: 260px;
-  background: rgba(28,61,90,0.95);
-  padding: 22px;
-  color: white;
+  background: rgba(0, 40, 70, 0.95);
+  padding: 25px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.2);
 }
 
 .logo {
+  font-size: 22px;
   text-align: center;
-  margin-bottom: 35px;
-  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
+/* ================= TABS ================= */
 .tab-btn {
-  width: 100%;
-  background: none;
+  background: transparent;
   border: none;
-  color: white;
+  color: #fff;
   padding: 14px;
-  margin-bottom: 12px;
   border-radius: 8px;
-  cursor: pointer;
+  text-align: left;
   font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.tab-btn:hover,
+.tab-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
 .tab-btn.active {
-  background: rgba(255,255,255,0.2);
+  background: #1da1f2;
+  box-shadow: 0 0 10px rgba(29,161,242,0.8);
 }
 
-/* CONTENT */
+/* ======================================================
+   MAIN CONTENT
+   ====================================================== */
 .content {
   flex: 1;
   padding: 40px;
   overflow-y: auto;
 }
 
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* BOOKING CARD */
-.booking-card {
-  max-width: 900px;
-  margin: auto;
-  padding: 40px;
-  background: rgba(255,255,255,0.93);
-  border-radius: 20px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-  animation: fadeUp 0.8s ease;
+/* ================= BREADCRUMB ================= */
+.breadcrumb {
+  margin-bottom: 15px;
+  color: #555;
+  font-size: 14px;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
+.breadcrumb span {
+  color: #1da1f2;
+  font-weight: 500;
+}
+
+/* ================= TAB CONTENT ================= */
+.tab-content {
+  display: none;
+  animation: fadeIn 0.6s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.booking-card h2 {
-  text-align: center;
-  color: #1c3d5a;
+/* ======================================================
+   CARDS
+   ====================================================== */
+.hero-card,
+.simple-card {
+  background: rgba(255,255,255,0.95);
+  padding: 35px;
+  border-radius: 16px;
+  max-width: 850px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.hero-card h1 {
+  font-size: 36px;
+  margin-bottom: 15px;
+  color: #003366;
 }
 
 .subtitle {
-  text-align: center;
+  font-size: 18px;
   margin-bottom: 30px;
-  color: #555;
+  color: #444;
 }
 
-/* FORM */
-#bookingForm {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px 25px;
-}
-
-.form-section {
-  grid-column: span 2;
-  background: #f5f9ff;
-  padding: 20px;
-  border-radius: 12px;
-}
-
-.form-section h3 {
-  margin-top: 0;
-  margin-bottom: 12px;
-  color: #1c3d5a;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: #4facfe;
-  box-shadow: 0 0 10px rgba(79,172,254,0.4);
-}
-
-textarea {
-  resize: none;
-}
-
-/* BUTTON */
-.submit-btn {
-  grid-column: span 2;
-  margin-top: 20px;
-  padding: 16px;
-  font-size: 17px;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  color: white;
-  background: linear-gradient(135deg, #007adf, #00ecbc);
+/* ======================================================
+   BUTTONS
+   ====================================================== */
+.submit-btn,
+.outline-btn {
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-size: 16px;
   cursor: pointer;
+  transition: all 0.3s;
+}
+
+.submit-btn {
+  background: #1da1f2;
+  color: #fff;
+  border: none;
+  box-shadow: 0 6px 15px rgba(29,161,242,0.4);
 }
 
 .submit-btn:hover {
-  box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(29,161,242,0.6);
 }
 
-/* SIMPLE CARD */
-.simple-card {
-  max-width: 650px;
-  margin: auto;
-  padding: 30px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 14px;
+.submit-btn.danger {
+  background: #e74c3c;
 }
 
+.outline-btn {
+  background: transparent;
+  border: 2px solid #1da1f2;
+  color: #1da1f2;
+}
+
+.outline-btn:hover {
+  background: #1da1f2;
+  color: #fff;
+}
+
+.full {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* ======================================================
+   TOURISM LIST
+   ====================================================== */
 .tour-list {
   list-style: none;
-  padding: 0;
+  columns: 2;
+  margin-top: 15px;
 }
 
 .tour-list li {
-  padding: 6px 0;
+  padding: 8px 0;
+  font-size: 15px;
+  color: #333;
 }
 
-/* RESPONSIVE */
+/* ======================================================
+   INFO TEXT
+   ====================================================== */
+.info {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* ======================================================
+   RESPONSIVE
+   ====================================================== */
 @media (max-width: 900px) {
-  #bookingForm {
-    grid-template-columns: 1fr;
-  }
   .sidebar {
-    width: 210px;
+    width: 200px;
+  }
+
+  .hero-card h1 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 700px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    text-align: center;
+    flex: 1;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .tour-list {
+    columns: 1;
   }
 }

@@ -1,4 +1,7 @@
 const express = require("express");
+const path = require("path");
+const fs = require("fs");
+
 const Booking = require("../models/Booking");
 const FlightQuota = require("../models/FlightQuota");
 
@@ -19,6 +22,7 @@ router.get("/booking/:ticketNumber", async (req, res) => {
 
     res.json(booking);
   } catch (err) {
+    console.error("View booking error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -43,7 +47,6 @@ router.post("/modify-booking/:ticketNumber", async (req, res) => {
 
     /* ---------- DATE CHANGE ---------- */
     if (newDate && newDate !== booking.date) {
-
       const oldQuota = await FlightQuota.findOne({ date: booking.date });
       const newQuota = await FlightQuota.findOne({ date: newDate });
 
@@ -53,7 +56,7 @@ router.post("/modify-booking/:ticketNumber", async (req, res) => {
         });
       }
 
-      // Restore old seat safely
+      // Restore old seat
       if (oldQuota) {
         oldQuota.bookedSeats = Math.max(0, oldQuota.bookedSeats - 1);
         oldQuota.availableSeats += 1;
@@ -104,7 +107,7 @@ router.post("/cancel-booking/:ticketNumber", async (req, res) => {
     booking.cancelledBy = "PASSENGER";
     await booking.save();
 
-    // Restore seat safely
+    // Restore seat
     const quota = await FlightQuota.findOne({ date: booking.date });
     if (quota) {
       quota.bookedSeats = Math.max(0, quota.bookedSeats - 1);
@@ -118,6 +121,39 @@ router.post("/cancel-booking/:ticketNumber", async (req, res) => {
 
   } catch (err) {
     console.error("Passenger cancel error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ==========================================
+   DOWNLOAD TICKET PDF  ✅ NEW FEATURE
+   ========================================== */
+router.get("/download-ticket/:ticketNumber", async (req, res) => {
+  try {
+    const booking = await Booking.findOne({
+      ticketNumber: req.params.ticketNumber
+    });
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // Adjust path ONLY if your folder name is different
+    const pdfPath = path.join(
+      __dirname,
+      "..",
+      "tickets",
+      `Ticket-${booking.ticketNumber}.pdf`
+    );
+
+    if (!fs.existsSync(pdfPath)) {
+      return res.status(404).json({ message: "Ticket PDF not found" });
+    }
+
+    res.download(pdfPath, `Ticket-${booking.ticketNumber}.pdf`);
+
+  } catch (err) {
+    console.error("Download ticket error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });

@@ -8,86 +8,100 @@
 </head>
 <body>
 
-<!-- SKY BACKGROUND -->
+<!-- ===== BACKGROUND SKY ===== -->
 <div class="sky">
   <div class="clouds cloud1"></div>
   <div class="clouds cloud2"></div>
   <div class="clouds cloud3"></div>
 </div>
 
-<!-- HELICOPTER -->
+<!-- ===== HELICOPTER ===== -->
 <div class="helicopter">🚁</div>
 
 <div class="app">
 
-  <!-- SIDEBAR -->
+  <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar">
-    <h2 class="logo">Kashmir Heli Services</h2>
+    <h2 class="logo">Kashmir<br>Heli Services</h2>
 
     <button class="tab-btn active" onclick="openTab('home', this)">
       🏠 Home
     </button>
 
-    <button class="tab-btn" onclick="redirectToLogin()">
-      🚁 Book Flight
+    <button class="tab-btn" onclick="openTab('passenger', this)">
+      👤 Passenger
     </button>
 
-    <button class="tab-btn" onclick="openTab('status', this)">
-      📄 Flight Status
+    <button class="tab-btn" onclick="openTab('admin', this)">
+      🛂 Admin
     </button>
 
     <button class="tab-btn" onclick="openTab('tourism', this)">
-      🏔️ Tourist Places
+      🏔️ Tourism
     </button>
   </aside>
 
-  <!-- MAIN CONTENT -->
+  <!-- ===== MAIN CONTENT ===== -->
   <main class="content">
 
     <!-- ================= HOME ================= -->
     <section id="home" class="tab-content active">
-      <div class="simple-card">
-        <h2>🚁 Welcome to Kashmir Heli Services</h2>
-        <p>
-          Experience safe, reliable, and scenic helicopter travel across
-          Kashmir. Book flights to top destinations with ease.
+      <div class="hero-card">
+        <h1>🚁 Kashmir Heli Services</h1>
+        <p class="subtitle">
+          Official helicopter booking portal for safe, reliable, and scenic air travel across Kashmir.
         </p>
 
-        <button class="submit-btn" onclick="redirectToLogin()">
-          ✈️ Book Helicopter Flight
-        </button>
+        <div class="hero-actions">
+          <button class="submit-btn" onclick="goPassengerLogin()">
+            ✈️ Book Helicopter
+          </button>
+          <button class="outline-btn" onclick="openTab('tourism', document.querySelectorAll('.tab-btn')[3])">
+            🏔️ Explore Kashmir
+          </button>
+        </div>
       </div>
     </section>
 
-    <!-- ================= FLIGHT STATUS ================= -->
-    <section id="status" class="tab-content">
+    <!-- ================= PASSENGER ================= -->
+    <section id="passenger" class="tab-content">
       <div class="simple-card">
-        <h2>📄 Check Flight Status</h2>
+        <h2>👤 Passenger Services</h2>
 
-        <input
-          type="text"
-          id="statusTicket"
-          placeholder="Enter Ticket Number (HC-XXXXXX)"
-        >
-
-        <button onclick="checkStatus()">Check Status</button>
-
-        <div id="statusResult" class="info"></div>
-
-        <button
-          id="cancelBtn"
-          style="display:none; margin-top:10px;"
-          onclick="cancelBooking()"
-        >
-          ❌ Cancel Booking
+        <button class="submit-btn full" onclick="goPassengerLogin()">
+          🔐 Passenger Login (OTP)
         </button>
+
+        <button class="outline-btn full" onclick="goManageBooking()">
+          📄 Manage / Download Ticket
+        </button>
+
+        <p class="info">
+          Book helicopter flights, download tickets, modify or cancel bookings.
+        </p>
       </div>
     </section>
 
-    <!-- ================= TOURIST PLACES ================= -->
+    <!-- ================= ADMIN ================= -->
+    <section id="admin" class="tab-content">
+      <div class="simple-card">
+        <h2>🛂 Admin Panel</h2>
+
+        <button class="submit-btn danger full" onclick="goAdminLogin()">
+          🔑 Admin Login
+        </button>
+
+        <p class="info">
+          Quota management, booking control, reports & monitoring.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= TOURISM ================= -->
     <section id="tourism" class="tab-content">
       <div class="simple-card">
-        <h2>🏔️ Tourist Places in Kashmir</h2>
+        <h2>🏔️ Tourist Destinations in Kashmir</h2>
+
         <ul class="tour-list">
           <li>Gulmarg</li>
           <li>Sonamarg</li>
@@ -116,22 +130,26 @@
   </main>
 </div>
 
-<script src="script.js"></script>
-
+<!-- ===== SCRIPTS ===== -->
 <script>
 function openTab(tabId, btn) {
-  document.querySelectorAll(".tab-content").forEach(t =>
-    t.classList.remove("active")
-  );
-  document.querySelectorAll(".tab-btn").forEach(b =>
-    b.classList.remove("active")
-  );
+  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.getElementById(tabId).classList.add("active");
   btn.classList.add("active");
 }
 
-function redirectToLogin() {
+/* ===== REDIRECTS ===== */
+function goPassengerLogin() {
   window.location.href = "passenger/login.html";
+}
+
+function goManageBooking() {
+  window.location.href = "passenger/manage.html";
+}
+
+function goAdminLogin() {
+  window.location.href = "admin/login.html";
 }
 </script>
 
