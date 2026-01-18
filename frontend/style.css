@@ -1,300 +1,287 @@
-/* ======================================================
-   GLOBAL RESET & BASE
-   ====================================================== */
+/* ===============================
+   GLOBAL RESET & VARIABLES
+   =============================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+:root {
+  --primary: #1f7aff;
+  --secondary: #0b3c5d;
+  --accent: #ffc107;
+  --dark: #0f172a;
+  --light: #f8fafc;
+  --glass: rgba(255, 255, 255, 0.15);
 }
 
 body {
+  font-family: "Inter", "Poppins", sans-serif;
+  background: #eef2f7;
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+/* ===============================
+   HERO SECTION
+   =============================== */
+.hero {
+  position: relative;
   height: 100vh;
-  overflow: hidden;
-  background: linear-gradient(to bottom, #87ceeb, #e6f6ff);
+  background: url("https://images.unsplash.com/photo-1508614589041-895b88991e3e")
+    center / cover no-repeat;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ======================================================
-   SKY & CLOUDS
-   ====================================================== */
-.sky {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-}
-
-.clouds {
+.hero-overlay {
   position: absolute;
-  background: rgba(255,255,255,0.9);
-  border-radius: 50px;
-  opacity: 0.8;
-  animation: moveClouds linear infinite;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 23, 42, 0.85),
+    rgba(15, 23, 42, 0.6)
+  );
 }
 
-.cloud1 {
-  width: 180px;
-  height: 60px;
-  top: 20%;
-  left: -200px;
-  animation-duration: 60s;
-}
-
-.cloud2 {
-  width: 250px;
-  height: 80px;
-  top: 45%;
-  left: -300px;
-  animation-duration: 90s;
-}
-
-.cloud3 {
-  width: 200px;
-  height: 65px;
-  top: 70%;
-  left: -250px;
-  animation-duration: 75s;
-}
-
-@keyframes moveClouds {
-  from { transform: translateX(0); }
-  to { transform: translateX(140vw); }
-}
-
-/* ======================================================
-   HELICOPTER ANIMATION
-   ====================================================== */
-.helicopter {
-  position: fixed;
-  top: 12%;
-  right: 8%;
-  font-size: 70px;
-  animation: hover 3s ease-in-out infinite;
+.hero * {
+  position: relative;
   z-index: 2;
 }
 
-@keyframes hover {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-}
-
-/* ======================================================
-   APP LAYOUT
-   ====================================================== */
-.app {
+/* ===============================
+   TOP NAV
+   =============================== */
+.top-nav {
   display: flex;
-  height: 100vh;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 40px;
+  color: white;
 }
 
-/* ================= SIDEBAR ================= */
-.sidebar {
-  width: 260px;
-  background: rgba(0, 40, 70, 0.95);
-  padding: 25px;
-  color: #fff;
+.brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-actions button {
+  margin-left: 12px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.nav-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.admin-btn {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.admin-btn:hover {
+  background: white;
+  color: var(--secondary);
+}
+
+/* ===============================
+   HERO CONTENT
+   =============================== */
+.hero-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+  justify-content: center;
+  padding: 0 40px;
+  max-width: 900px;
+  color: white;
 }
 
-.logo {
-  font-size: 22px;
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-/* ================= TABS ================= */
-.tab-btn {
-  background: transparent;
-  border: none;
-  color: #fff;
-  padding: 14px;
-  border-radius: 8px;
-  text-align: left;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.tab-btn:hover {
-  background: rgba(255,255,255,0.15);
-}
-
-.tab-btn.active {
-  background: #1da1f2;
-  box-shadow: 0 0 10px rgba(29,161,242,0.8);
-}
-
-/* ======================================================
-   MAIN CONTENT
-   ====================================================== */
-.content {
-  flex: 1;
-  padding: 40px;
-  overflow-y: auto;
-}
-
-/* ================= BREADCRUMB ================= */
-.breadcrumb {
+.hero-content h2 {
+  font-size: 3rem;
+  font-weight: 700;
   margin-bottom: 15px;
-  color: #555;
-  font-size: 14px;
+  animation: fadeUp 1s ease;
 }
 
-.breadcrumb span {
-  color: #1da1f2;
-  font-weight: 500;
-}
-
-/* ================= TAB CONTENT ================= */
-.tab-content {
-  display: none;
-  animation: fadeIn 0.6s ease;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ======================================================
-   CARDS
-   ====================================================== */
-.hero-card,
-.simple-card {
-  background: rgba(255,255,255,0.95);
-  padding: 35px;
-  border-radius: 16px;
-  max-width: 850px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
-.hero-card h1 {
-  font-size: 36px;
-  margin-bottom: 15px;
-  color: #003366;
-}
-
-.subtitle {
-  font-size: 18px;
+.hero-content p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  opacity: 0.95;
   margin-bottom: 30px;
-  color: #444;
+  animation: fadeUp 1.2s ease;
 }
 
-/* ======================================================
-   BUTTONS
-   ====================================================== */
-.submit-btn,
-.outline-btn {
-  padding: 14px 22px;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.submit-btn {
-  background: #1da1f2;
-  color: #fff;
-  border: none;
-  box-shadow: 0 6px 15px rgba(29,161,242,0.4);
-}
-
-.submit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(29,161,242,0.6);
-}
-
-.submit-btn.danger {
-  background: #e74c3c;
-}
-
-.outline-btn {
-  background: transparent;
-  border: 2px solid #1da1f2;
-  color: #1da1f2;
-}
-
-.outline-btn:hover {
-  background: #1da1f2;
-  color: #fff;
-}
-
-.full {
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.hero-actions {
+.hero-buttons {
   display: flex;
   gap: 15px;
-  flex-wrap: wrap;
+  animation: fadeUp 1.4s ease;
 }
 
-/* ======================================================
-   TOURISM LIST
-   ====================================================== */
-.tour-list {
-  list-style: none;
-  columns: 2;
-  margin-top: 15px;
+.primary-btn,
+.secondary-btn {
+  padding: 14px 26px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-.tour-list li {
-  padding: 8px 0;
-  font-size: 15px;
-  color: #333;
+.primary-btn {
+  background: var(--primary);
+  color: white;
 }
 
-/* ======================================================
-   INFO TEXT
-   ====================================================== */
-.info {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #555;
+.primary-btn:hover {
+  background: #155edc;
+  transform: translateY(-3px);
 }
 
-/* ======================================================
+.secondary-btn {
+  background: white;
+  color: var(--secondary);
+}
+
+.secondary-btn:hover {
+  background: #e2e8f0;
+  transform: translateY(-3px);
+}
+
+/* ===============================
+   TRUST STRIP
+   =============================== */
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  background: white;
+  padding: 18px;
+  text-align: center;
+  font-weight: 500;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.trust-strip div {
+  padding: 10px;
+}
+
+/* ===============================
+   QUICK ACTIONS
+   =============================== */
+.actions {
+  padding: 60px 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+}
+
+.action-card {
+  background: white;
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-top: 5px solid var(--primary);
+}
+
+.action-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+.action-card h3 {
+  margin-bottom: 10px;
+  color: var(--secondary);
+}
+
+/* ===============================
+   DESTINATIONS
+   =============================== */
+.destinations {
+  background: linear-gradient(135deg, #0b3c5d, #1f7aff);
+  color: white;
+  padding: 70px 40px;
+}
+
+.destinations h2 {
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 2.2rem;
+}
+
+.destination-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 18px;
+}
+
+.destination {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 18px;
+  border-radius: 10px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.destination:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ===============================
+   FOOTER
+   =============================== */
+.footer {
+  background: #020617;
+  color: #cbd5f5;
+  text-align: center;
+  padding: 25px;
+  font-size: 0.9rem;
+}
+
+/* ===============================
+   ANIMATIONS
+   =============================== */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================
    RESPONSIVE
-   ====================================================== */
-@media (max-width: 900px) {
-  .sidebar {
-    width: 200px;
+   =============================== */
+@media (max-width: 768px) {
+  .hero-content h2 {
+    font-size: 2.2rem;
   }
 
-  .hero-card h1 {
-    font-size: 28px;
-  }
-}
-
-@media (max-width: 700px) {
-  .app {
+  .top-nav {
     flex-direction: column;
+    gap: 10px;
   }
 
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    overflow-x: auto;
+  .hero-content {
+    padding: 0 20px;
   }
 
-  .tab-btn {
-    text-align: center;
-    flex: 1;
-  }
-
-  .content {
-    padding: 20px;
-  }
-
-  .tour-list {
-    columns: 1;
+  .actions {
+    padding: 40px 20px;
   }
 }
