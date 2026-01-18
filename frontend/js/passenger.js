@@ -1,5 +1,5 @@
 /* =====================================================
-   BOOK FLIGHT (OTP PROTECTED + ANTI DOUBLE CLICK)
+   BOOK FLIGHT (OTP PROTECTED + FULL VALIDATION)
    ===================================================== */
 document.getElementById("bookingForm")?.addEventListener("submit", async e => {
   e.preventDefault();
@@ -7,7 +7,7 @@ document.getElementById("bookingForm")?.addEventListener("submit", async e => {
   const result = document.getElementById("result");
   const submitBtn = document.getElementById("submitBtn");
 
-  /* 🔐 CHECK OTP TOKEN */
+  /* ========= AUTH CHECK ========= */
   const token = localStorage.getItem("passengerToken");
   if (!token) {
     alert("Please login via OTP before booking");
@@ -18,22 +18,66 @@ document.getElementById("bookingForm")?.addEventListener("submit", async e => {
   const form = e.target;
   const formData = new FormData(form);
 
-  /* BASIC VALIDATION */
-  if (
-    !formData.get("passengerName") ||
-    !formData.get("age") ||
-    !formData.get("phone") ||
-    !formData.get("from") ||
-    !formData.get("to") ||
-    !formData.get("date") ||
-    !formData.get("idType") ||
-    !formData.get("idNumber")
-  ) {
-    result.innerText = "❌ Please fill all required fields";
-    return;
+  /* ========= READ VALUES ========= */
+  const name = formData.get("passengerName").trim();
+  const age = Number(formData.get("age"));
+  const phone = formData.get("phone").trim();
+  const emergencyPhone = formData.get("emergencyPhone").trim();
+  const email = formData.get("email")?.trim();
+  const from = formData.get("from").trim();
+  const to = formData.get("to").trim();
+  const date = formData.get("date");
+  const idType = formData.get("idType");
+  const idNumber = formData.get("idNumber").trim();
+
+  /* ========= REGEX ========= */
+  const nameRegex = /^[A-Za-z ]{3,}$/;
+  const phoneRegex = /^[0-9]{10}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  /* ========= VALIDATIONS ========= */
+
+  if (!nameRegex.test(name)) {
+    return showError("Name must be at least 3 letters (no numbers)");
   }
 
-  /* 🔒 DISABLE BUTTON */
+  if (age < 1 || age > 120) {
+    return showError("Age must be between 1 and 120");
+  }
+
+  if (!phoneRegex.test(phone)) {
+    return showError("Phone number must be exactly 10 digits");
+  }
+
+  if (!phoneRegex.test(emergencyPhone)) {
+    return showError("Emergency phone must be exactly 10 digits");
+  }
+
+  if (email && !emailRegex.test(email)) {
+    return showError("Invalid email format");
+  }
+
+  if (!from || !to) {
+    return showError("From and To locations are required");
+  }
+
+  if (from.toLowerCase() === to.toLowerCase()) {
+    return showError("From and To locations cannot be same");
+  }
+
+  const selectedDate = new Date(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (selectedDate < today) {
+    return showError("Travel date cannot be in the past");
+  }
+
+  if (!idType || idNumber.length < 4) {
+    return showError("Valid ID type and number required");
+  }
+
+  /* ========= SUBMIT ========= */
   submitBtn.disabled = true;
   submitBtn.innerText = "Booking... ⏳";
   result.innerText = "";
@@ -52,100 +96,31 @@ document.getElementById("bookingForm")?.addEventListener("submit", async e => {
     if (res.ok) {
       result.innerText =
         "✅ Booking Successful! Ticket Number: " + data.ticketNumber;
-
       form.reset();
-
-      /* ✅ IMPORTANT: RE-ENABLE BUTTON */
-      submitBtn.disabled = false;
-      submitBtn.innerText = "✈️ Book Flight";
-
     } else {
-      result.innerText = "❌ " + (data.message || "Booking failed");
-      submitBtn.disabled = false;
-      submitBtn.innerText = "✈️ Book Flight";
+      showError(data.message || "Booking failed");
     }
 
   } catch (err) {
     console.error(err);
-    result.innerText = "❌ Server error. Please try again.";
+    showError("Server error. Please try again.");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerText = "✈️ Book Flight";
+  }
+
+  /* ========= HELPER ========= */
+  function showError(msg) {
+    result.innerText = "❌ " + msg;
     submitBtn.disabled = false;
     submitBtn.innerText = "✈️ Book Flight";
   }
 });
 
-
 /* =====================================================
-   VIEW BOOKING DETAILS + SHOW DOWNLOAD BUTTON
-   ===================================================== */
-async function loadBooking() {
-  const ticketInput = document.getElementById("ticketNumber");
-  const bookingDetails = document.getElementById("bookingDetails");
-  const downloadBtn = document.getElementById("downloadBtn");
-
-  const ticket = ticketInput.value.trim();
-
-  bookingDetails.innerHTML = "";
-  downloadBtn.style.display = "none";
-
-  if (!ticket) {
-    bookingDetails.innerHTML = "<p>❌ Enter ticket number</p>";
-    return;
-  }
-
-  try {
-    const res = await fetch(
-      "http://localhost:4000/passenger/booking/" + ticket
-    );
-
-    const booking = await res.json();
-
-    if (!res.ok) {
-      bookingDetails.innerHTML = "<p>❌ Booking not found</p>";
-      downloadBtn.style.display = "none";
-      return;
-    }
-
-    bookingDetails.innerHTML = `
-      <p><b>Name:</b> ${booking.passengerName}</p>
-      <p><b>Date:</b> ${booking.date}</p>
-      <p><b>From:</b> ${booking.from}</p>
-      <p><b>To:</b> ${booking.to}</p>
-      <p><b>Status:</b> ${booking.status}</p>
-    `;
-
-    /* ✅ SHOW DOWNLOAD BUTTON */
-    downloadBtn.style.display = "inline-block";
-
-  } catch (err) {
-    bookingDetails.innerHTML = "<p>❌ Server error</p>";
-    downloadBtn.style.display = "none";
-  }
-}
-
-
-/* =====================================================
-   DOWNLOAD TICKET PDF
-   ===================================================== */
-function downloadTicket() {
-  const ticket = document.getElementById("ticketNumber").value.trim();
-
-  if (!ticket) {
-    alert("Enter ticket number first");
-    return;
-  }
-
-  window.open(
-    `http://localhost:4000/passenger/download-ticket/${ticket}`,
-    "_blank"
-  );
-}
-
-
-/* =====================================================
-   PASSENGER LOGOUT
+   LOGOUT
    ===================================================== */
 function passengerLogout() {
   localStorage.removeItem("passengerToken");
-  alert("Logged out successfully");
   window.location.href = "login.html";
 }
