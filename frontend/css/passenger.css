@@ -91,3 +91,24 @@ button:disabled {
   margin-top: 15px;
   background: #ff4d4d;
 }
+
+
+.availability-box {
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  display: none;
+}
+
+.availability-yes {
+  background: #e6fff1;
+  color: #0a7a3d;
+  border: 1px solid #8de0b8;
+}
+
+.availability-no {
+  background: #ffecec;
+  color: #b10000;
+  border: 1px solid #ffb3b3;
+}

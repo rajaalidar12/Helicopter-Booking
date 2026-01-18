@@ -158,4 +158,44 @@ router.get("/download-ticket/:ticketNumber", async (req, res) => {
   }
 });
 
+
+/* ==========================================
+   CHECK SEAT AVAILABILITY (DATE)
+   ========================================== */
+router.get("/check-availability/:date", async (req, res) => {
+  try {
+    const { date } = req.params;
+
+    const quota = await FlightQuota.findOne({ date });
+
+    if (!quota) {
+      return res.json({
+        available: false,
+        message: "No flights scheduled for this date"
+      });
+    }
+
+    if (quota.availableSeats <= 0) {
+      return res.json({
+        available: false,
+        message: "No seats available"
+      });
+    }
+
+    res.json({
+      available: true,
+      availableSeats: quota.availableSeats,
+      message: `${quota.availableSeats} seats available`
+    });
+
+  } catch (err) {
+    console.error("Availability check error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+
+
 module.exports = router;

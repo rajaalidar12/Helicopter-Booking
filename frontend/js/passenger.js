@@ -45,7 +45,8 @@ document.getElementById("bookingForm")?.addEventListener("submit", async e => {
   if (from.toLowerCase() === to.toLowerCase()) return showError("From and To cannot be same");
 
   const selectedDate = new Date(date);
-  const today = new Date(); today.setHours(0,0,0,0);
+  const today = new Date(); 
+  today.setHours(0,0,0,0);
   if (selectedDate < today) return showError("Date cannot be in the past");
 
   if (!idType || idNumber.length < 4) return showError("Valid ID required");
@@ -58,7 +59,9 @@ document.getElementById("bookingForm")?.addEventListener("submit", async e => {
   try {
     const res = await fetch("http://localhost:4000/book", {
       method: "POST",
-      headers: { Authorization: "Bearer " + token },
+      headers: {
+        Authorization: "Bearer " + token
+      },
       body: formData
     });
 
@@ -67,6 +70,7 @@ document.getElementById("bookingForm")?.addEventListener("submit", async e => {
     if (res.ok) {
       result.innerText = "✅ Booking Successful! Ticket: " + data.ticketNumber;
       form.reset();
+      resetAvailability();
     } else {
       showError(data.message || "Booking failed");
     }
@@ -82,6 +86,52 @@ document.getElementById("bookingForm")?.addEventListener("submit", async e => {
     result.innerText = "❌ " + msg;
   }
 });
+
+/* =====================================================
+   SEAT AVAILABILITY CHECK (DATE SELECT)
+   ===================================================== */
+const dateInput = document.getElementById("travelDate");
+const availabilityBox = document.getElementById("availabilityBox");
+const submitBtn = document.getElementById("submitBtn");
+
+dateInput?.addEventListener("change", async () => {
+  const date = dateInput.value;
+  if (!date) return;
+
+  availabilityBox.style.display = "block";
+  availabilityBox.className = "availability-box";
+  availabilityBox.innerText = "Checking seat availability... ⏳";
+  submitBtn.disabled = true;
+
+  try {
+    const res = await fetch(
+      `http://localhost:4000/passenger/check-availability/${date}`
+    );
+    const data = await res.json();
+
+    if (data.available) {
+      availabilityBox.classList.add("availability-yes");
+      availabilityBox.innerText = "✅ " + data.message;
+      submitBtn.disabled = false;
+    } else {
+      availabilityBox.classList.add("availability-no");
+      availabilityBox.innerText = "❌ " + data.message;
+      submitBtn.disabled = true;
+    }
+
+  } catch {
+    availabilityBox.classList.add("availability-no");
+    availabilityBox.innerText = "❌ Unable to check availability";
+    submitBtn.disabled = true;
+  }
+});
+
+function resetAvailability() {
+  if (availabilityBox) {
+    availabilityBox.style.display = "none";
+    availabilityBox.innerText = "";
+  }
+}
 
 /* =====================================================
    MANAGE BOOKING (VIEW + DOWNLOAD + CANCEL)
@@ -140,6 +190,7 @@ function downloadTicket() {
   const btn = document.getElementById("downloadBtn");
   const ticket = btn.getAttribute("data-ticket");
   if (!ticket) return;
+
   window.open(
     `http://localhost:4000/passenger/download-ticket/${ticket}`,
     "_blank"
