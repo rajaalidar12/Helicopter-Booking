@@ -177,3 +177,40 @@ function goManage() {
 function goAdmin() {
   window.location.href = "admin/login.html";
 }
+
+/* ================= ANIMATED COUNTERS ================= */
+
+const counters = document.querySelectorAll(".counter");
+let started = false;
+
+function runCounters() {
+  counters.forEach(counter => {
+    const target = +counter.getAttribute("data-target");
+    let count = 0;
+
+    const increment = target / 120;
+
+    const update = () => {
+      count += increment;
+      if (count < target) {
+        counter.innerText = Math.floor(count);
+        requestAnimationFrame(update);
+      } else {
+        counter.innerText = target;
+      }
+    };
+
+    update();
+  });
+}
+
+/* Run when visible */
+window.addEventListener("scroll", () => {
+  const statsSection = document.querySelector(".stats");
+  const sectionTop = statsSection.getBoundingClientRect().top;
+
+  if (sectionTop < window.innerHeight && !started) {
+    runCounters();
+    started = true;
+  }
+});

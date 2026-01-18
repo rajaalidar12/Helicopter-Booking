@@ -28,7 +28,10 @@
   <div class="hero-content">
     <h2>Fast • Safe • Scenic Helicopter Travel</h2>
     <p>
-      Official helicopter booking portal for Jammu & Kashmir.
+      Official helicopter booking portal for Jammu & Kashmir.<br>
+      OTP-secured booking • Real-time availability • PDF tickets
+    </p>
+
     <div class="hero-actions">
       <button class="primary" onclick="goPassenger()">✈️ Book Flight</button>
       <button class="secondary" onclick="goManage()">📄 Manage Booking</button>
@@ -41,44 +44,64 @@
   <div class="trust-item">
     <span class="trust-icon">🔐</span>
     <div>
-      <h4>Secure Authentication</h4>
-      <p>OTP-based passenger verification</p>
+      <h4>OTP Secured</h4>
+      <p>Verified passenger authentication</p>
     </div>
   </div>
 
   <div class="trust-item">
     <span class="trust-icon">🚁</span>
     <div>
-      <h4>Reliable Operations</h4>
-      <p>Admin-controlled quota & scheduling</p>
+      <h4>Govt-Controlled Quota</h4>
+      <p>Admin monitored seat allocation</p>
     </div>
   </div>
 
   <div class="trust-item">
     <span class="trust-icon">📄</span>
     <div>
-      <h4>Official Ticketing</h4>
-      <p>PDF tickets with QR verification</p>
+      <h4>Official PDF Tickets</h4>
+      <p>QR-verified boarding passes</p>
     </div>
   </div>
 
   <div class="trust-item">
     <span class="trust-icon">⛰️</span>
     <div>
-      <h4>Scenic & Safe Travel</h4>
-      <p>Certified routes across Kashmir</p>
+      <h4>Certified Routes</h4>
+      <p>Scenic & safe destinations</p>
     </div>
   </div>
 </section>
 
+<!-- ================= LIVE STATS ================= -->
+<section class="stats">
+  <div class="stat-card">
+    <h2 class="counter" id="totalBookings">0</h2>
+    <p>Total Bookings</p>
+  </div>
+
+  <div class="stat-card">
+    <h2 class="counter" id="confirmedBookings">0</h2>
+    <p>Confirmed Flights</p>
+  </div>
+
+  <div class="stat-card">
+    <h2 class="counter" id="totalSeats">0</h2>
+    <p>Total Seats</p>
+  </div>
+
+  <div class="stat-card">
+    <h2 class="counter" id="availableSeats">0</h2>
+    <p>Available Seats</p>
+  </div>
+</section>
 
 <!-- ================= DESTINATIONS ================= -->
 <section class="destinations">
   <h2>🏔️ Popular Tourist Destinations</h2>
 
   <div class="destination-grid">
-
-    <!-- ROW AUTO-WRAPS -->
     <button class="dest-btn" onclick="openDestination('gulmarg')">Gulmarg</button>
     <button class="dest-btn" onclick="openDestination('sonamarg')">Sonamarg</button>
     <button class="dest-btn" onclick="openDestination('pahalgam')">Pahalgam</button>
@@ -96,7 +119,6 @@
     <button class="dest-btn" onclick="openDestination('naranag')">Naranag</button>
     <button class="dest-btn" onclick="openDestination('aru')">Aru Valley</button>
     <button class="dest-btn" onclick="openDestination('betaab')">Betaab Valley</button>
-
   </div>
 </section>
 
@@ -115,65 +137,89 @@
 <footer class="footer">
   <p>
     © 2026 Kashmir Heli Services<br>
-    Official helicopter booking platform, designed and developed by Raja Ali
+    Official helicopter booking platform
   </p>
 </footer>
 
 <!-- ================= SCRIPT ================= -->
 <script>
-function goPassenger() {
-  window.location.href = "passenger/login.html";
-}
-function goManage() {
-  window.location.href = "passenger/manage.html";
-}
-function goAdmin() {
-  window.location.href = "admin/login.html";
+/* ---------- NAV ---------- */
+function goPassenger() { window.location.href = "passenger/login.html"; }
+function goManage() { window.location.href = "passenger/manage.html"; }
+function goAdmin() { window.location.href = "admin/login.html"; }
+
+/* ---------- LIVE COUNTERS ---------- */
+async function loadStats() {
+  try {
+    const res = await fetch("http://localhost:4000/admin/stats/live");
+    const data = await res.json();
+
+    animateCounter("totalBookings", data.totalBookings);
+    animateCounter("confirmedBookings", data.confirmed);
+    animateCounter("totalSeats", data.totalSeats);
+    animateCounter("availableSeats", data.availableSeats);
+  } catch (err) {
+    console.error("Stats load failed");
+  }
 }
 
-/* DESTINATION DATA */
+function animateCounter(id, target) {
+  const el = document.getElementById(id);
+  let count = 0;
+  const step = Math.ceil(target / 60);
+
+  const interval = setInterval(() => {
+    count += step;
+    if (count >= target) {
+      el.innerText = target;
+      clearInterval(interval);
+    } else {
+      el.innerText = count;
+    }
+  }, 20);
+}
+
+loadStats();
+
+/* ---------- DESTINATIONS ---------- */
 const destinations = {
-  gulmarg: { title: "Gulmarg", desc: "World-famous ski resort and gondola destination.", list: ["Skiing", "Gondola", "Snow sports"] },
-  sonamarg: { title: "Sonamarg", desc: "High-altitude valley and gateway to Ladakh.", list: ["Thajiwas Glacier", "Mountain views"] },
-  pahalgam: { title: "Pahalgam", desc: "Lidder valley, base of Amarnath Yatra.", list: ["Aru Valley", "River Lidder"] },
-  dal: { title: "Dal Lake", desc: "Iconic lake with shikaras and houseboats.", list: ["Shikara rides", "Floating gardens"] },
-  gurez: { title: "Gurez Valley", desc: "Remote valley near LOC with pristine beauty.", list: ["Kishanganga River", "Dard culture"] },
-  yusmarg: { title: "Yusmarg", desc: "Peaceful meadow surrounded by forests.", list: ["Meadows", "Hiking"] },
-  doodhpathri: { title: "Doodhpathri", desc: "Lush green valley with milky streams.", list: ["Grasslands", "Streams"] },
-  bangus: { title: "Bangus Valley", desc: "Untouched alpine valley in Kupwara.", list: ["Wildflowers", "Silence"] },
-  aharbal: { title: "Aharbal Waterfall", desc: "Niagara of Kashmir.", list: ["Waterfall", "Photography"] },
-  verinag: { title: "Verinag", desc: "Source of Jhelum river.", list: ["Mughal garden"] },
-  kokernag: { title: "Kokernag", desc: "Freshwater springs and gardens.", list: ["Springs", "Gardens"] },
-  manasbal: { title: "Manasbal Lake", desc: "Deepest lake of Kashmir.", list: ["Lotus flowers"] },
-  wular: { title: "Wular Lake", desc: "Largest freshwater lake in India.", list: ["Bird watching"] },
-  tosamaidan: { title: "Tosa Maidan", desc: "High-altitude meadow.", list: ["Camping"] },
-  naranag: { title: "Naranag", desc: "Ancient ruins & trekking base.", list: ["Temples"] },
-  aru: { title: "Aru Valley", desc: "Base camp for treks.", list: ["Trekking"] },
-  betaab: { title: "Betaab Valley", desc: "Film shooting location.", list: ["Photography"] }
+  gulmarg:{title:"Gulmarg",desc:"World-famous ski resort and gondola rides.",list:["Skiing","Gondola","Snow sports"]},
+  sonamarg:{title:"Sonamarg",desc:"Gateway to Ladakh with glaciers.",list:["Thajiwas Glacier","Sindh River"]},
+  pahalgam:{title:"Pahalgam",desc:"Lidder valley & Amarnath base.",list:["Aru Valley","River Lidder"]},
+  dal:{title:"Dal Lake",desc:"Iconic lake of Srinagar.",list:["Shikara","Houseboats"]},
+  gurez:{title:"Gurez Valley",desc:"Remote Himalayan valley.",list:["Kishanganga","Culture"]},
+  yusmarg:{title:"Yusmarg",desc:"Meadow surrounded by forests.",list:["Hiking"]},
+  doodhpathri:{title:"Doodhpathri",desc:"Milky streams & valleys.",list:["Grasslands"]},
+  bangus:{title:"Bangus Valley",desc:"Untouched alpine valley.",list:["Wildflowers"]},
+  aharbal:{title:"Aharbal Waterfall",desc:"Niagara of Kashmir.",list:["Photography"]},
+  verinag:{title:"Verinag",desc:"Source of Jhelum.",list:["Mughal Garden"]},
+  kokernag:{title:"Kokernag",desc:"Freshwater springs.",list:["Gardens"]},
+  manasbal:{title:"Manasbal Lake",desc:"Deepest lake of Kashmir.",list:["Lotus"]},
+  wular:{title:"Wular Lake",desc:"Largest freshwater lake.",list:["Birding"]},
+  tosamaidan:{title:"Tosa Maidan",desc:"High altitude meadow.",list:["Camping"]},
+  naranag:{title:"Naranag",desc:"Ancient ruins.",list:["Temples"]},
+  aru:{title:"Aru Valley",desc:"Trek base camp.",list:["Trekking"]},
+  betaab:{title:"Betaab Valley",desc:"Film valley.",list:["Photography"]}
 };
 
-function openDestination(key) {
-  const d = destinations[key];
-  document.getElementById("destTitle").innerText = d.title;
-  document.getElementById("destDesc").innerText = d.desc;
-
-  const ul = document.getElementById("destList");
-  ul.innerHTML = "";
-  d.list.forEach(i => {
-    const li = document.createElement("li");
-    li.innerText = "✔ " + i;
+function openDestination(key){
+  const d=destinations[key];
+  document.getElementById("destTitle").innerText=d.title;
+  document.getElementById("destDesc").innerText=d.desc;
+  const ul=document.getElementById("destList");
+  ul.innerHTML="";
+  d.list.forEach(i=>{
+    const li=document.createElement("li");
+    li.innerText="✔ "+i;
     ul.appendChild(li);
   });
-
-  document.getElementById("destinationModal").style.display = "flex";
+  document.getElementById("destinationModal").style.display="flex";
 }
-
-function closeDestination() {
-  document.getElementById("destinationModal").style.display = "none";
+function closeDestination(){
+  document.getElementById("destinationModal").style.display="none";
 }
 </script>
 
-</body>
 <div class="snow"></div>
-
+</body>
 </html>

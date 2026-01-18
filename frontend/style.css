@@ -317,3 +317,47 @@ body {
     transform: translateY(0);
   }
 }
+
+
+/* ================= STATS COUNTERS ================= */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 25px;
+  padding: 60px;
+  background: linear-gradient(
+    to right,
+    rgba(10, 61, 98, 0.95),
+    rgba(30, 90, 140, 0.95)
+  );
+  color: white;
+  text-align: center;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px 20px;
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+}
+
+.stat-card h2 {
+  font-size: 42px;
+  margin: 0;
+  font-weight: 700;
+  color: #ffd32a;
+}
+
+.stat-card p {
+  margin-top: 8px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: #f1f1f1;
+}

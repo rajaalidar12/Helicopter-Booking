@@ -8,7 +8,7 @@ const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
 
 /* ==========================================
-   VIEW ALL BOOKINGS
+   VIEW ALL BOOKINGS (ADMIN)
    ========================================== */
 router.get("/bookings", adminAuth, async (req, res) => {
   const bookings = await Booking.find().sort({ createdAt: -1 });
@@ -35,7 +35,7 @@ router.post("/cancel-booking/:id", adminAuth, async (req, res) => {
 
   const quota = await FlightQuota.findOne({ date: booking.date });
   if (quota) {
-    quota.bookedSeats -= 1;
+    quota.bookedSeats = Math.max(0, quota.bookedSeats - 1);
     quota.availableSeats += 1;
     await quota.save();
   }
@@ -44,7 +44,7 @@ router.post("/cancel-booking/:id", adminAuth, async (req, res) => {
 });
 
 /* ==========================================
-   SET MONTHLY QUOTA (ADMIN)  ✅✅✅
+   SET MONTHLY QUOTA (ADMIN)
    ========================================== */
 router.post("/set-monthly-quota", adminAuth, async (req, res) => {
   try {
@@ -99,7 +99,7 @@ router.post("/set-monthly-quota", adminAuth, async (req, res) => {
 });
 
 /* ==========================================
-   REPORTS SUMMARY
+   REPORTS SUMMARY (ADMIN)
    ========================================== */
 router.get("/reports/summary", adminAuth, async (req, res) => {
   const totalBookings = await Booking.countDocuments();
@@ -120,7 +120,7 @@ router.get("/reports/summary", adminAuth, async (req, res) => {
 });
 
 /* ==========================================
-   DATE-WISE REPORT
+   DATE-WISE REPORT (ADMIN)
    ========================================== */
 router.get("/reports/date/:date", adminAuth, async (req, res) => {
   const date = req.params.date;
@@ -135,6 +135,32 @@ router.get("/reports/date/:date", adminAuth, async (req, res) => {
     cancelledBookings: bookings.filter(b => b.status === "CANCELLED").length,
     quota
   });
+});
+
+/* ==========================================
+   🔴 LIVE STATS (PUBLIC – LANDING PAGE)
+   ========================================== */
+router.get("/stats/live", async (req, res) => {
+  try {
+    const totalBookings = await Booking.countDocuments();
+    const confirmed = await Booking.countDocuments({ status: "CONFIRMED" });
+    const cancelled = await Booking.countDocuments({ status: "CANCELLED" });
+
+    const quotas = await FlightQuota.find();
+    const totalSeats = quotas.reduce((s, q) => s + q.totalSeats, 0);
+    const availableSeats = quotas.reduce((s, q) => s + q.availableSeats, 0);
+
+    res.json({
+      totalBookings,
+      confirmed,
+      cancelled,
+      totalSeats,
+      availableSeats
+    });
+  } catch (err) {
+    console.error("Live stats error:", err);
+    res.status(500).json({ message: "Stats unavailable" });
+  }
 });
 
 module.exports = router;
