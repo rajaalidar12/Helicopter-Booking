@@ -7,6 +7,13 @@ const bookingSchema = new mongoose.Schema(
     date: String,
     phone: String,
     email: String,
+
+    passengerContact: {
+  type: String,
+  required: true,
+  index: true
+},
+
     address: String,
 
     from: String,

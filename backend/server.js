@@ -14,6 +14,8 @@ const path = require("path");
 /* ================= SECURITY ================= */
 const helmet = require("helmet");
 const cors = require("cors");
+const rateLimit = require("express-rate-limit");
+
 
 /* ================= FILE UPLOAD ================= */
 const multer = require("multer");
@@ -43,6 +45,41 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+
+/* ================= RATE LIMITERS (STEP 0.6) ================= */
+
+// General API protection
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300,                // 300 requests / IP
+  message: { message: "Too many requests, slow down" }
+});
+
+// Booking abuse protection
+const bookingLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 10,                 // max 10 bookings per IP
+  message: { message: "Booking limit exceeded. Try later." }
+});
+
+// OTP verification brute-force protection
+const otpVerifyLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 5,                  // 5 OTP attempts
+  message: { message: "Too many OTP attempts. Try later." }
+});
+
+// Admin login brute-force protection
+const adminLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { message: "Too many admin login attempts" }
+});
+
+
+
+
+
 
 /* ================= SECURITY HEADERS ================= */
 app.use(helmet());
@@ -135,6 +172,7 @@ const upload = multer({
    ================================================= */
 app.post(
   "/book",
+  bookingLimiter,
   passengerAuth,
   upload.fields([
     { name: "idDocument", maxCount: 1 },
@@ -191,6 +229,7 @@ app.post(
         emergencyPhone,
         idDocumentPath: req.files?.idDocument?.[0]?.path,
         supportingDocumentPath: req.files?.supportingDocument?.[0]?.path,
+        passengerContact: req.passenger.contact,
         ticketNumber,
         status: "CONFIRMED"
       });
@@ -264,10 +303,10 @@ app.post("/admin/set-quota", adminAuth, async (req, res) => {
 });
 
 /* ================= ROUTE REGISTRATION ================= */
-app.use("/admin", adminAuthRoutes);
-app.use("/admin", adminBookingRoutes);
+app.use("/admin", generalLimiter,adminAuthRoutes);
+app.use("/admin", generalLimiter,adminBookingRoutes);
 app.use("/passenger-auth", passengerAuthRoutes);
-app.use("/passenger", passengerBookingRoutes);
+app.use("/passenger", generalLimiter,passengerBookingRoutes);
 
 /* ================= GLOBAL ERROR HANDLER ================= */
 app.use((err, req, res, next) => {

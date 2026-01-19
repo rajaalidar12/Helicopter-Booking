@@ -112,3 +112,104 @@ button:disabled {
   color: #b10000;
   border: 1px solid #ffb3b3;
 }
+
+/* ================= MODIFY BOOKING UI ================= */
+
+.modify-card {
+  margin-top: 25px;
+  padding: 22px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f7fbff, #eef6ff);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  animation: fadeUp 0.4s ease;
+}
+
+.modify-card h3 {
+  margin-bottom: 6px;
+  color: #003366;
+}
+
+.modify-card .hint {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.modify-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.modify-grid .field {
+  display: flex;
+  flex-direction: column;
+}
+
+.modify-grid label {
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.modify-grid input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.modify-grid input:focus {
+  outline: none;
+  border-color: #0077ff;
+  box-shadow: 0 0 0 3px rgba(0,119,255,0.15);
+}
+
+.primary-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #0077ff, #0055cc);
+  color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+}
+
+/* Animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.manage-card {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background: #f9fbff;
+  border: 1px solid #dbe4ff;
+
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.manage-card.active {
+  max-height: 1200px;
+  opacity: 1;
+}

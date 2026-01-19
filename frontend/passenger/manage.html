@@ -11,23 +11,81 @@
 
 <div class="container">
 
+  <!-- HEADER -->
   <h1>🔍 Manage Your Booking</h1>
-  <p class="subtitle">View booking details or download your ticket PDF</p>
+  <p class="subtitle">
+    View, modify, cancel your booking or download ticket PDF
+  </p>
 
-  <!-- TICKET INPUT -->
+  <!-- ================= TICKET LOOKUP ================= -->
   <div class="form-group">
     <input
       id="ticketNumber"
       type="text"
       placeholder="Enter Ticket Number (HC-XXXXXX)"
     >
-    <button onclick="loadBooking()">View Booking</button>
+    <button class="primary-btn" onclick="loadBooking()">
+      🔎 View Booking
+    </button>
   </div>
 
-  <!-- BOOKING DETAILS -->
+  <!-- ================= BOOKING DETAILS ================= -->
   <div id="bookingDetails" class="booking-details"></div>
 
-  <!-- DOWNLOAD BUTTON (HIDDEN INITIALLY) -->
+  <!-- ================= MODIFY BOOKING ================= -->
+<div id="modifySection" class="modify-card" style="display:none;">
+  <h3>✏️ Modify Booking</h3>
+  <p class="hint">
+    You may change travel date or update contact details.
+  </p>
+
+  <div class="modify-grid">
+
+    <div class="field">
+      <label>📅 New Travel Date</label>
+      <input type="date" id="newDate">
+    </div>
+
+    <div class="field">
+      <label>📞 New Phone (10 digits)</label>
+      <input
+        type="text"
+        id="newPhone"
+        maxlength="10"
+        inputmode="numeric"
+        placeholder="Optional"
+      >
+    </div>
+
+    <div class="field">
+      <label>📧 New Email</label>
+      <input
+        type="email"
+        id="newEmail"
+        placeholder="Optional"
+      >
+    </div>
+
+  </div>
+
+  <div class="modify-actions">
+    <button class="primary-btn" onclick="modifyBooking()">
+      💾 Save Changes
+    </button>
+
+    <button
+      class="danger-btn"
+      id="cancelBtn"
+      style="display:none;"
+      onclick="cancelBooking(window.currentTicket)"
+    >
+      ❌ Cancel Booking
+    </button>
+  </div>
+</div>
+
+
+  <!-- ================= DOWNLOAD TICKET ================= -->
   <button
     id="downloadBtn"
     class="download-btn"
@@ -37,9 +95,10 @@
     📄 Download Ticket PDF
   </button>
 
-  <!-- BACK / LOGOUT -->
-  <div style="margin-top: 20px;">
-    <a href="book.html">← Back to Booking</a> |
+  <!-- ================= FOOTER ACTIONS ================= -->
+  <div class="footer-actions">
+    <a href="book.html">← Back to Booking</a>
+    <span>|</span>
     <a href="#" onclick="passengerLogout()">Logout</a>
   </div>
 

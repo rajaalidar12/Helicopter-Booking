@@ -143,8 +143,75 @@
 
       <button type="submit" id="submitBtn">✈️ Book Flight</button>
 
+
       <p id="result"></p>
     </form>
+
+
+
+    <hr>
+
+<button
+  type="'button"
+  class="secondary-btn"
+  onclick="toggleManageBooking()"
+>
+  🔧 Manage Existing Booking
+</button>
+<!-- ================= MANAGE BOOKING SECTION ================= -->
+<div id="manageBookingSection" style="display:none; margin-top:30px;">
+
+  <h2>🔍 Manage Your Booking</h2>
+
+  <!-- Ticket Input -->
+  <div class="form-group">
+    <input
+      type="text"
+      id="ticketNumber"
+      placeholder="Enter Ticket Number (HC-XXXXXX)"
+    >
+    <button onclick="loadBooking()">View Booking</button>
+  </div>
+
+  <!-- Booking Details -->
+  <div id="bookingDetails" class="booking-details"></div>
+
+  <!-- Modify Section -->
+  <div id="modifySection" class="modify-card" style="display:none;">
+    <h3>✏️ Modify Booking</h3>
+
+    <label>📅 New Date</label>
+    <input type="date" id="newDate">
+
+    <label>📞 New Phone</label>
+    <input type="text" id="newPhone" maxlength="10">
+
+    <label>📧 New Email</label>
+    <input type="email" id="newEmail">
+
+    <button onclick="modifyBooking()">💾 Save Changes</button>
+  </div>
+
+  <!-- Download -->
+  <button
+    id="downloadBtn"
+    style="display:none;"
+    onclick="downloadTicket()"
+  >
+    📄 Download Ticket
+  </button>
+
+  <!-- Cancel -->
+  <button
+    id="cancelBtn"
+    style="display:none; background:#c0392b; color:#fff;"
+    onclick="cancelBooking()"
+  >
+    ❌ Cancel Booking
+  </button>
+
+</div>
+
 
     <button class="logout-btn" onclick="passengerLogout()">Logout</button>
   </div>
