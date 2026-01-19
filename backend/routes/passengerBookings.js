@@ -7,20 +7,39 @@ const FlightQuota = require("../models/FlightQuota");
 
 const router = express.Router();
 
+/* ======================================================
+   HELPER VALIDATORS (STEP 0.5.4)
+   ====================================================== */
+const ticketRegex = /^HC-\d{6}$/;
+const phoneRegex = /^[0-9]{10}$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+function isValidDate(dateStr) {
+  if (!dateRegex.test(dateStr)) return false;
+  const d = new Date(dateStr);
+  return !isNaN(d.getTime());
+}
+
 /* ==========================================
-   VIEW OWN BOOKING (TICKET NUMBER)
+   VIEW OWN BOOKING (SAFE)
    ========================================== */
 router.get("/booking/:ticketNumber", async (req, res) => {
   try {
-    const booking = await Booking.findOne({
-      ticketNumber: req.params.ticketNumber
-    });
+    const ticketNumber = String(req.params.ticketNumber || "").trim();
+
+    if (!ticketRegex.test(ticketNumber)) {
+      return res.status(400).json({ message: "Invalid ticket number format" });
+    }
+
+    const booking = await Booking.findOne({ ticketNumber });
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
 
     res.json(booking);
+
   } catch (err) {
     console.error("View booking error:", err);
     res.status(500).json({ message: "Server error" });
@@ -32,10 +51,32 @@ router.get("/booking/:ticketNumber", async (req, res) => {
    ========================================== */
 router.post("/modify-booking/:ticketNumber", async (req, res) => {
   try {
-    const { newDate, phone, email } = req.body;
+    const ticketNumber = String(req.params.ticketNumber || "").trim();
+
+    if (!ticketRegex.test(ticketNumber)) {
+      return res.status(400).json({ message: "Invalid ticket number" });
+    }
+
+    let { newDate, phone, email } = req.body;
+
+    if (newDate) newDate = String(newDate).trim();
+    if (phone) phone = String(phone).trim();
+    if (email) email = String(email).trim();
+
+    if (phone && !phoneRegex.test(phone)) {
+      return res.status(400).json({ message: "Invalid phone number" });
+    }
+
+    if (email && !emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email address" });
+    }
+
+    if (newDate && !isValidDate(newDate)) {
+      return res.status(400).json({ message: "Invalid date format" });
+    }
 
     const booking = await Booking.findOne({
-      ticketNumber: req.params.ticketNumber,
+      ticketNumber,
       status: "CONFIRMED"
     });
 
@@ -47,6 +88,7 @@ router.post("/modify-booking/:ticketNumber", async (req, res) => {
 
     /* ---------- DATE CHANGE ---------- */
     if (newDate && newDate !== booking.date) {
+
       const oldQuota = await FlightQuota.findOne({ date: booking.date });
       const newQuota = await FlightQuota.findOne({ date: newDate });
 
@@ -56,14 +98,12 @@ router.post("/modify-booking/:ticketNumber", async (req, res) => {
         });
       }
 
-      // Restore old seat
       if (oldQuota) {
         oldQuota.bookedSeats = Math.max(0, oldQuota.bookedSeats - 1);
         oldQuota.availableSeats += 1;
         await oldQuota.save();
       }
 
-      // Deduct new seat
       newQuota.bookedSeats += 1;
       newQuota.availableSeats -= 1;
       await newQuota.save();
@@ -89,15 +129,22 @@ router.post("/modify-booking/:ticketNumber", async (req, res) => {
 });
 
 /* ==========================================
-   CANCEL BOOKING (PASSENGER)
+   CANCEL BOOKING (SAFE)
    ========================================== */
 router.post("/cancel-booking/:ticketNumber", async (req, res) => {
   try {
+    const ticketNumber = String(req.params.ticketNumber || "").trim();
+
+    if (!ticketRegex.test(ticketNumber)) {
+      return res.status(400).json({ message: "Invalid ticket number" });
+    }
+
     const booking = await Booking.findOne({
-      ticketNumber: req.params.ticketNumber
+      ticketNumber,
+      status: "CONFIRMED"
     });
 
-    if (!booking || booking.status !== "CONFIRMED") {
+    if (!booking) {
       return res.status(400).json({
         message: "Active booking not found or already cancelled"
       });
@@ -107,7 +154,6 @@ router.post("/cancel-booking/:ticketNumber", async (req, res) => {
     booking.cancelledBy = "PASSENGER";
     await booking.save();
 
-    // Restore seat
     const quota = await FlightQuota.findOne({ date: booking.date });
     if (quota) {
       quota.bookedSeats = Math.max(0, quota.bookedSeats - 1);
@@ -126,31 +172,34 @@ router.post("/cancel-booking/:ticketNumber", async (req, res) => {
 });
 
 /* ==========================================
-   DOWNLOAD TICKET PDF  ✅ NEW FEATURE
+   DOWNLOAD TICKET PDF (SAFE)
    ========================================== */
 router.get("/download-ticket/:ticketNumber", async (req, res) => {
   try {
-    const booking = await Booking.findOne({
-      ticketNumber: req.params.ticketNumber
-    });
+    const ticketNumber = String(req.params.ticketNumber || "").trim();
+
+    if (!ticketRegex.test(ticketNumber)) {
+      return res.status(400).json({ message: "Invalid ticket number" });
+    }
+
+    const booking = await Booking.findOne({ ticketNumber });
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    // Adjust path ONLY if your folder name is different
     const pdfPath = path.join(
       __dirname,
       "..",
       "tickets",
-      `Ticket-${booking.ticketNumber}.pdf`
+      `Ticket-${ticketNumber}.pdf`
     );
 
     if (!fs.existsSync(pdfPath)) {
       return res.status(404).json({ message: "Ticket PDF not found" });
     }
 
-    res.download(pdfPath, `Ticket-${booking.ticketNumber}.pdf`);
+    res.download(pdfPath, `Ticket-${ticketNumber}.pdf`);
 
   } catch (err) {
     console.error("Download ticket error:", err);
@@ -158,13 +207,19 @@ router.get("/download-ticket/:ticketNumber", async (req, res) => {
   }
 });
 
-
 /* ==========================================
    CHECK SEAT AVAILABILITY (DATE)
    ========================================== */
 router.get("/check-availability/:date", async (req, res) => {
   try {
-    const { date } = req.params;
+    const date = String(req.params.date || "").trim();
+
+    if (!isValidDate(date)) {
+      return res.status(400).json({
+        available: false,
+        message: "Invalid date format"
+      });
+    }
 
     const quota = await FlightQuota.findOne({ date });
 
@@ -193,9 +248,5 @@ router.get("/check-availability/:date", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
-
-
 
 module.exports = router;

@@ -1,26 +1,39 @@
 const jwt = require("jsonwebtoken");
 
-module.exports = function (req, res, next) {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({
-      message: "Passenger not authenticated"
-    });
-  }
-
-  const token = authHeader.split(" ")[1];
-
+module.exports = (req, res, next) => {
   try {
-    // MUST MATCH routes/passengerAuth.js
-    const decoded = jwt.verify(token, "PASSENGER_SECRET");
+    const authHeader = req.headers.authorization;
 
-    req.passenger = decoded; // optional, for future use
+    if (!authHeader) {
+      return res.status(401).json({ message: "Passenger not authenticated" });
+    }
+
+    let token;
+
+    if (authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    } else {
+      token = authHeader;
+    }
+
+    if (!token) {
+      return res.status(401).json({ message: "Malformed token" });
+    }
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_PASSENGER_SECRET
+    );
+
+    if (decoded.role !== "PASSENGER") {
+      return res.status(403).json({ message: "Invalid passenger token" });
+    }
+
+    req.passenger = decoded;
     next();
 
   } catch (err) {
-    return res.status(401).json({
-      message: "Passenger not authenticated"
-    });
+    console.error("Passenger auth error:", err.message);
+    return res.status(401).json({ message: "Passenger not authenticated" });
   }
 };

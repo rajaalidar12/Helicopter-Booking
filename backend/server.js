@@ -1,14 +1,22 @@
 /********************************************************************
  * KASHMIR HELI SERVICES - FINAL BACKEND
  * Admin + Passenger OTP Auth + Quota + Reports + PDF Ticket + Email
+ * SECURITY HARDENED (STEP 0.5 – STABLE)
  ********************************************************************/
+
 require("dotenv").config();
 
+/* ================= CORE ================= */
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
-const multer = require("multer");
 const path = require("path");
+
+/* ================= SECURITY ================= */
+const helmet = require("helmet");
+const cors = require("cors");
+
+/* ================= FILE UPLOAD ================= */
+const multer = require("multer");
 
 /* ================= MODELS ================= */
 const Booking = require("./models/Booking");
@@ -21,17 +29,55 @@ const { sendTicketEmail } = require("./utils/emailSender");
 /* ================= ROUTES ================= */
 const adminAuthRoutes = require("./routes/adminAuth");
 const adminBookingRoutes = require("./routes/adminBookings");
-const passengerBookingRoutes = require("./routes/passengerBookings");
 const passengerAuthRoutes = require("./routes/passengerAuth");
+const passengerBookingRoutes = require("./routes/passengerBookings");
 
-/* ================= MIDDLEWARE ================= */
+/* ================= AUTH MIDDLEWARE ================= */
 const adminAuth = require("./middleware/adminAuth");
 const passengerAuth = require("./middleware/passengerAuth");
 
-/* ================= APP ================= */
+/* ================= APP INIT ================= */
 const app = express();
+
+/* ================= BASIC MIDDLEWARE ================= */
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+
+/* ================= SECURITY HEADERS ================= */
+app.use(helmet());
+
+/* =====================================================
+   SAFE MANUAL INPUT SANITIZATION (NO req.query TOUCH)
+   ===================================================== */
+function sanitize(obj) {
+  if (!obj || typeof obj !== "object") return;
+
+  for (const key in obj) {
+    // Block NoSQL operators
+    if (key.startsWith("$") || key.includes(".")) {
+      delete obj[key];
+      continue;
+    }
+
+    if (typeof obj[key] === "string") {
+      obj[key] = obj[key]
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    } else if (typeof obj[key] === "object") {
+      sanitize(obj[key]);
+    }
+  }
+}
+
+app.use((req, res, next) => {
+  sanitize(req.body);
+  sanitize(req.params);
+  next();
+});
+
+/* ================= STATIC FILES ================= */
+app.use("/uploads", express.static("uploads"));
 
 /* ================= DATABASE ================= */
 mongoose
@@ -48,7 +94,7 @@ app.get("/", (req, res) => {
 });
 
 /* =================================================
-   FILE UPLOAD CONFIG (MULTER)
+   FILE UPLOAD CONFIG (MULTER – HARDENED)
    ================================================= */
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -68,12 +114,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
   fileFilter: (req, file, cb) => {
-    const allowed = /jpg|jpeg|png|pdf/i;
-    if (!allowed.test(file.mimetype)) {
-      return cb(new Error("Only JPG, PNG, PDF files allowed"));
+    const allowedMime = [
+      "image/jpeg",
+      "image/png",
+      "application/pdf"
+    ];
+
+    if (!allowedMime.includes(file.mimetype)) {
+      return cb(new Error("Invalid file type"), false);
     }
+
     cb(null, true);
   }
 });
@@ -112,7 +164,7 @@ app.post(
         });
       }
 
-      // Check quota
+      /* ===== QUOTA CHECK ===== */
       const quota = await FlightQuota.findOne({ date });
       if (!quota || quota.availableSeats <= 0) {
         return res.status(400).json({
@@ -143,22 +195,17 @@ app.post(
         status: "CONFIRMED"
       });
 
-      /* ================= SAVE BOOKING ================= */
       await booking.save();
 
-      /* ================= UPDATE QUOTA ================= */
       quota.bookedSeats += 1;
       quota.availableSeats -= 1;
       await quota.save();
 
-      /* ================= PDF + EMAIL ================= */
       const pdfPath = await generateTicketPDF(booking);
-
       if (email) {
         await sendTicketEmail(email, ticketNumber, pdfPath);
       }
 
-      /* ================= RESPONSE ================= */
       res.json({
         message: "Booking successful",
         ticketNumber
@@ -185,7 +232,6 @@ app.post("/admin/set-quota", adminAuth, async (req, res) => {
     }
 
     const totalSeats = sorties * seatsPerSortie;
-
     let quota = await FlightQuota.findOne({ date });
 
     if (!quota) {
