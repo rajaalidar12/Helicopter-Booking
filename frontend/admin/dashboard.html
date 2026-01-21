@@ -2,74 +2,375 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Dashboard | Kashmir Heli Services</title>
-  <link rel="stylesheet" href="../css/admin.css">
+  <title>Admin Command Center | Kashmir Heli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ================= RESET & VARIABLES ================= */
+    :root {
+      --primary: #0f172a;      /* Dark Slate */
+      --accent: #3b82f6;       /* Bright Blue */
+      --danger: #ef4444;       /* Red */
+      --success: #10b981;      /* Green */
+      --bg-body: #f1f5f9;      /* Light Gray */
+      --bg-card: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+    body {
+      background-color: var(--bg-body);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+      width: 260px;
+      background: var(--primary);
+      color: white;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100%;
+      transition: all 0.3s;
+    }
+
+    .brand {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item {
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    /* LOGOUT BUTTON SPECIFIC STYLE */
+    .logout-btn {
+      margin-top: auto; 
+      color: #ef4444; 
+      font-weight: bold;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ffadad;
+    }
+
+    /* ================= MAIN CONTENT ================= */
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      margin-left: 260px; /* Width of sidebar */
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      color: var(--primary);
+      font-size: 1.8rem;
+    }
+
+    .admin-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .admin-avatar {
+      width: 40px; height: 40px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ================= GRID LAYOUT ================= */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .full-width { grid-column: span 2; }
+
+    /* ================= CARDS ================= */
+    .card {
+      background: var(--bg-card);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border);
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      color: var(--text-main);
+      margin-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ================= INPUTS & BUTTONS ================= */
+    .control-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1); }
+
+    button {
+      padding: 10px 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover { background: #1e293b; transform: translateY(-1px); }
+    
+    .btn-action { background: var(--accent); }
+    .btn-action:hover { background: #2563eb; }
+
+    /* ================= REPORTS SECTION ================= */
+    #reportSummary {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    #reportSummary li {
+      background: #f8fafc;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    #dateReport {
+      background: #1e293b;
+      color: #00ff00;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      margin-top: 15px;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    /* ================= TABLE ================= */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    thead {
+      background: #f8fafc;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    tr:hover { background: #f8fafc; }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .full-width { grid-column: span 1; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="dashboard">
-  <h1>🚁 Admin Dashboard</h1>
+<aside class="sidebar">
+  <div class="brand">🚁 HeliAdmin</div>
+  <div class="nav-item active">📊 Dashboard</div>
+  <div class="nav-item">📅 Quotas</div>
+  <div class="nav-item">👥 Passengers</div>
+  
+  <div class="nav-item logout-btn" onclick="directLogout()">
+    🚪 Logout
+  </div>
+</aside>
 
-  <!-- ================= DAILY QUOTA ================= -->
-  <section class="card">
-    <h2>Set Daily Quota</h2>
-    <input type="date" id="quotaDate">
-    <input type="number" id="sorties" placeholder="Sorties">
-    <input type="number" id="seats" placeholder="Seats per Sortie">
-    <button type="button" onclick="setQuota()">Save Quota</button>
-  </section>
+<main class="main-content">
+  
+  <div class="header">
+    <h1>Dashboard Overview</h1>
+    <div class="admin-profile">
+      <span>Administrator</span>
+      <div class="admin-avatar">AD</div>
+    </div>
+  </div>
 
-  <!-- ================= MONTHLY QUOTA ================= -->
-  <section class="card">
-    <h2>Set Monthly Quota</h2>
-    <input type="number" id="quotaYear" placeholder="Year">
-    <input type="number" id="quotaMonth" placeholder="Month (1-12)">
-    <input type="number" id="monthlySorties" placeholder="Sorties per day">
-    <input type="number" id="monthlySeats" placeholder="Seats per sortie">
-    <button type="button" onclick="setMonthlyQuota()">Save Monthly Quota</button>
-  </section>
+  <div class="dashboard-grid">
+    
+    <section class="card">
+      <h2>⚙️ Set Daily Quota</h2>
+      <div class="control-group">
+        <input type="date" id="quotaDate">
+      </div>
+      <div class="control-group">
+        <input type="number" id="sorties" placeholder="Total Sorties">
+        <input type="number" id="seats" placeholder="Seats/Sortie">
+      </div>
+      <button class="btn-action" type="button" onclick="setQuota()">Save Daily Config</button>
+    </section>
 
-  <!-- ================= REPORTS ================= -->
-  <section class="card">
-    <h2>📊 Reports Summary</h2>
-    <button type="button" onclick="loadReports()">Load Reports</button>
+    <section class="card">
+      <h2>🗓️ Bulk Monthly Quota</h2>
+      <div class="control-group">
+        <input type="number" id="quotaYear" placeholder="Year (e.g. 2026)">
+        <input type="number" id="quotaMonth" placeholder="Month (1-12)">
+      </div>
+      <div class="control-group">
+        <input type="number" id="monthlySorties" placeholder="Sorties/Day">
+        <input type="number" id="monthlySeats" placeholder="Seats/Sortie">
+      </div>
+      <button class="btn-action" type="button" onclick="setMonthlyQuota()">Apply to All Days</button>
+    </section>
 
-    <ul id="reportSummary">
-      <li>Total Bookings: -</li>
-      <li>Confirmed Bookings: -</li>
-      <li>Cancelled Bookings: -</li>
-      <li>Total Seats: -</li>
-      <li>Available Seats: -</li>
-    </ul>
-  </section>
+    <section class="card full-width">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h2>📈 Analytics Summary</h2>
+        <button type="button" onclick="loadReports()">🔄 Refresh Data</button>
+      </div>
+      
+      <ul id="reportSummary">
+        <li>Total Bookings: Loading...</li>
+        <li>Confirmed: Loading...</li>
+        <li>Cancelled: Loading...</li>
+        <li>Total Seats: Loading...</li>
+        <li>Available Seats: Loading...</li>
+      </ul>
+    </section>
 
-  <!-- ================= DATE REPORT ================= -->
-  <section class="card">
-    <h2>📅 Date-wise Report</h2>
-    <input type="date" id="reportDate">
-    <button type="button" onclick="loadDateReport()">Get Report</button>
-    <pre id="dateReport"></pre>
-  </section>
+    <section class="card full-width">
+      <h2>🔎 Date-wise Inspector</h2>
+      <div class="control-group" style="max-width: 400px;">
+        <input type="date" id="reportDate">
+        <button type="button" onclick="loadDateReport()">Inspect</button>
+      </div>
+      <pre id="dateReport">Select a date to view detailed logs...</pre>
+    </section>
 
-  <!-- ================= BOOKINGS ================= -->
-  <section class="card">
-    <h2>All Bookings</h2>
-    <button type="button" onclick="loadBookings()">Refresh</button>
-    <table>
-      <thead>
-        <tr>
-          <th>Ticket</th>
-          <th>Name</th>
-          <th>Date</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="bookingTable"></tbody>
-    </table>
-  </section>
-</div>
+    <section class="card full-width">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h2>✈️ Recent Bookings</h2>
+        <button type="button" onclick="loadBookings()">🔄 Refresh List</button>
+      </div>
+      
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Ticket ID</th>
+              <th>Passenger Name</th>
+              <th>Travel Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bookingTable">
+            <tr><td colspan="5" style="text-align:center; color:#999;">Loading booking data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</main>
 
 <script src="../js/admin.js"></script>
+
+<script>
+  function directLogout() {
+    if(confirm("⚠️ Are you sure you want to logout?")) {
+      localStorage.removeItem("adminToken");
+      window.location.href = "login.html";
+    }
+  }
+</script>
+
 </body>
 </html>

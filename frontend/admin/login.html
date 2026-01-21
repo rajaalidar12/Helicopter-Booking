@@ -2,101 +2,182 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Login | Kashmir Heli Services</title>
+  <title>Admin Portal | Kashmir Heli Services</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="../style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ================= RESET & VARIABLES ================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
     body {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      /* Moody Himalayan Admin Background */
+      background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.7)), url('https://images.unsplash.com/photo-1519681393784-d8e5b5a4570e?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
     }
 
+    /* ================= GLASS CARD ================= */
     .login-card {
-      background: rgba(255,255,255,0.96);
-      padding: 40px;
-      border-radius: 18px;
-      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 3.5rem 2.5rem;
+      border-radius: 24px;
+      width: 90%;
       max-width: 420px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-      animation: fadeIn 0.7s ease;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      animation: fadeIn 0.8s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle shimmer effect on top */
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -50%; width: 100%; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+      transform: skewX(-25deg);
+      pointer-events: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ================= TYPOGRAPHY ================= */
+    .admin-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: inline-block;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
     }
 
     .login-card h2 {
-      text-align: center;
-      margin-bottom: 10px;
-      color: #8b0000;
+      color: #fff;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      letter-spacing: 1px;
     }
 
     .login-card p {
-      text-align: center;
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 25px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.85rem;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+
+    /* ================= INPUTS ================= */
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 15px;
     }
 
     .login-card input {
       width: 100%;
-      padding: 14px;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 15px;
+      padding: 16px;
+      padding-left: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
     }
 
+    .login-card input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .login-card input:focus {
+      background: rgba(0, 0, 0, 0.5);
+      border-color: #ef233c;
+      outline: none;
+      box-shadow: 0 0 15px rgba(239, 35, 60, 0.2);
+    }
+
+    /* ================= CAPTCHA ================= */
     .captcha-box {
-      background: #f2f2f2;
+      background: rgba(255, 255, 255, 0.1);
       padding: 12px;
       border-radius: 10px;
       text-align: center;
-      margin-bottom: 10px;
-      font-weight: 600;
+      margin-bottom: 15px;
+      font-weight: 500;
+      color: #fff;
+      border: 1px dashed rgba(255, 255, 255, 0.3);
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
     }
 
+    /* ================= BUTTONS ================= */
     .login-card button {
       width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: 10px;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 12px;
       cursor: pointer;
       border: none;
-      background: #8b0000;
+      /* Deep Red Gradient for Admin Authority */
+      background: linear-gradient(135deg, #d90429, #8d0801);
       color: #fff;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(141, 8, 1, 0.4);
+      margin-top: 10px;
     }
 
     .login-card button:hover {
-      box-shadow: 0 8px 20px rgba(139,0,0,0.5);
       transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(141, 8, 1, 0.6);
+      background: linear-gradient(135deg, #ef233c, #9d0208);
     }
 
+    /* ================= MESSAGES ================= */
     .msg {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      min-height: 1.5em;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
+
   </style>
 </head>
 <body>
 
 <div class="login-card">
-  <h2>🛂 Admin Login</h2>
-  <p>Restricted access – Authorized personnel only</p>
+  <div class="admin-icon">🛡️</div>
+  <h2>Admin Portal</h2>
+  <p>Authorized Personnel Only</p>
 
-  <input id="username" placeholder="Admin Username">
-  <input id="password" type="password" placeholder="Password">
-
-  <!-- CAPTCHA -->
-  <div class="captcha-box">
-    Solve: <span id="captchaQuestion"></span>
+  <div class="input-wrapper">
+    <input id="username" placeholder="Admin Username" autocomplete="off">
+  </div>
+  
+  <div class="input-wrapper">
+    <input id="password" type="password" placeholder="Secure Password">
   </div>
 
-  <input id="captchaAnswer" placeholder="Enter CAPTCHA answer">
+  <div class="captcha-box">
+    Security Check: <span id="captchaQuestion"></span>
+  </div>
 
-  <button onclick="adminLogin()">🔐 Login</button>
+  <input id="captchaAnswer" placeholder="Enter Result">
+
+  <button onclick="adminLogin()">🔐 Authenticate</button>
 
   <p id="msg" class="msg"></p>
 </div>
@@ -124,16 +205,19 @@ async function adminLogin() {
 
   if (!username || !password) {
     msg.innerText = "❌ Enter username and password";
+    msg.style.color = "#ff8fa3";
     return;
   }
 
   if (captcha !== captchaResult) {
-    msg.innerText = "❌ CAPTCHA incorrect";
+    msg.innerText = "❌ Security Check Failed";
+    msg.style.color = "#ff8fa3";
     generateCaptcha();
     return;
   }
 
-  msg.innerText = "🔐 Authenticating...";
+  msg.innerText = "🔐 Verifying Credentials...";
+  msg.style.color = "#fff";
 
   try {
     const res = await fetch("http://localhost:4000/admin/login", {
@@ -145,15 +229,21 @@ async function adminLogin() {
     const data = await res.json();
 
     if (res.ok) {
+      msg.innerText = "✅ Access Granted";
+      msg.style.color = "#4ade80";
       localStorage.setItem("adminToken", data.token);
-      window.location.href = "dashboard.html";
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1000);
     } else {
       msg.innerText = "❌ " + data.message;
+      msg.style.color = "#ff8fa3";
       generateCaptcha();
     }
 
   } catch {
-    msg.innerText = "❌ Server error";
+    msg.innerText = "❌ Server Connection Failed";
+    msg.style.color = "#ff8fa3";
     generateCaptcha();
   }
 }
