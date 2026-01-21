@@ -5,15 +5,73 @@
   <title>Kashmir Heli Services | Official Helicopter Booking Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
   <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* --- Extra Modal Styles for the new content --- */
+    .district-tag {
+        display: inline-block;
+        background-color: #e3f2fd;
+        color: #0288d1;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .modal-box h2 {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Scrollable modal content if data gets too long */
+    .modal-box {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    #destList {
+        text-align: left;
+        margin: 0.5rem 0 1.5rem 1.5rem;
+        color: #555;
+    }
+
+    #destList li {
+        margin-bottom: 0.5rem;
+    }
+
+    /* New styles for Reach Info */
+    .reach-info {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        text-align: left;
+        border-left: 4px solid #0288d1;
+    }
+    .reach-info h4 {
+        margin-bottom: 10px;
+        color: #333;
+        font-size: 1rem;
+    }
+    .reach-info p {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        color: #444;
+        display: flex;
+        align-items: flex-start;
+    }
+    .reach-info strong {
+        min-width: 140px;
+        display: inline-block;
+        color: #000;
+    }
+  </style>
 </head>
 <body>
 
-<!-- ================= HERO ================= -->
 <header class="hero">
   <div class="hero-overlay"></div>
 
@@ -21,7 +79,7 @@
     <h1 class="logo">🚁 Kashmir Heli Services</h1>
     <div class="nav-buttons">
       <button onclick="goPassenger()">Passenger Login</button>
-      <button class="admin-btn" onclick="goAdmin()">Admin Login</button>
+      <button class="admin-btn" onclick="goAdmin()">Admin Login</button> 
     </div>
   </nav>
 
@@ -34,12 +92,10 @@
 
     <div class="hero-actions">
       <button class="primary" onclick="goPassenger()">✈️ Book Flight</button>
-      <button class="secondary" onclick="goManage()">📄 Manage Booking</button>
     </div>
   </div>
 </header>
 
-<!-- ================= TRUST STRIP ================= -->
 <section class="trust-strip">
   <div class="trust-item">
     <span class="trust-icon">🔐</span>
@@ -74,7 +130,6 @@
   </div>
 </section>
 
-<!-- ================= LIVE STATS ================= -->
 <section class="stats">
   <div class="stat-card">
     <h2 class="counter" id="totalBookings">0</h2>
@@ -97,7 +152,6 @@
   </div>
 </section>
 
-<!-- ================= DESTINATIONS ================= -->
 <section class="destinations">
   <h2>🏔️ Popular Tourist Destinations</h2>
 
@@ -122,19 +176,28 @@
   </div>
 </section>
 
-<!-- ================= DESTINATION MODAL ================= -->
 <div id="destinationModal" class="modal">
   <div class="modal-box small">
     <span class="close" onclick="closeDestination()">&times;</span>
-    <h2 id="destTitle"></h2>
-    <p id="destDistrict" class="district-tag"></p>
-    <p id="destDesc"></p>
-    <ul id="destList"></ul>
+    <h2 id="destTitle">Destination Name</h2>
+    <span id="destDistrict" class="district-tag">District Name</span>
+    <p id="destDesc" style="margin-top: 10px; line-height: 1.6;">Description goes here...</p>
+    
+    <div class="reach-info">
+        <h4>🚗 How to Reach:</h4>
+        <p><strong>✈️ From Airport:</strong> <span id="destAirport"></span></p>
+        <p><strong>🚆 From Railway Stn:</strong> <span id="destTrain"></span></p>
+        <p><strong>🚌 From Jammu:</strong> <span id="destJammu"></span></p>
+    </div>
+    
+    <h4 style="margin-top: 20px; text-align: left; padding-left: 0.5rem;">✨ Activities to do:</h4>
+    <ul id="destList">
+      </ul>
+
     <button class="primary" onclick="goPassenger()">🚁 Book Helicopter</button>
   </div>
 </div>
 
-<!-- ================= FOOTER ================= -->
 <footer class="footer">
   <p>
     © 2026 Kashmir Heli Services<br>
@@ -142,12 +205,337 @@
   </p>
 </footer>
 
-<!-- ================= SCRIPT ================= -->
 <script>
-/* ---------- NAV ---------- */
 function goPassenger() { window.location.href = "passenger/login.html"; }
-function goManage() { window.location.href = "passenger/manage.html"; }
 function goAdmin() { window.location.href = "admin/login.html"; }
+
+/* ---------- DESTINATION DATA (Expanded & Detailed) ---------- */
+const destinations = {
+  gulmarg: {
+    title: "Gulmarg",
+    district: "Baramulla District",
+    desc: "Gulmarg, meaning 'Meadow of Flowers', is a world-renowned skiing destination situated in the Pir Panjal Range. It transforms from a lush green meadow with blooming lupines in summer to a white winter wonderland perfect for snow sports. It is home to the Gulmarg Gondola, one of the highest cable cars in the world, reaching an altitude of 3,979 meters.",
+    reach: {
+      airport: "56 km (approx 1 hr 45 min) via Tangmarg Road.",
+      train: "60 km (approx 1 hr 50 min) from Srinagar Station.",
+      jammu: "305 km (approx 8-9 hrs) via NH44."
+    },
+    activities: [
+        "Ride the famous Gulmarg Gondola (Phase 1 & Phase 2).",
+        "Skiing and Snowboarding (Winter).",
+        "Play Golf at the world's highest 18-hole golf course.",
+        "Trek to Apharwat Peak and Alpather Lake (Frozen Lake).",
+        "Pony rides through the strawberry valleys.",
+        "Visit the historic St. Mary’s Church and Maharani Temple."
+    ]
+  },
+  sonamarg: {
+    title: "Sonamarg",
+    district: "Ganderbal District",
+    desc: "Known as the 'Meadow of Gold', Sonamarg lies on the banks of the Nallah Sindh river. It is the gateway to Ladakh and famous for its massive Thajiwas Glacier. The valley is surrounded by snow-capped mountains and alpine forests, making it a prime location for trekking and camping.",
+    reach: {
+      airport: "80 km (approx 2 hr 30 min) via NH1.",
+      train: "85 km (approx 2 hr 45 min) from Srinagar Station.",
+      jammu: "360 km (approx 9-10 hrs) via NH44."
+    },
+    activities: [
+        "Trek or Pony ride to Thajiwas Glacier.",
+        "White Water Rafting in the Sindh River.",
+        "Trout Fishing (Angling).",
+        "Drive to Zero Point (Zojila Pass).",
+        "Camping along the riverside.",
+        "Start point for the Kashmir Great Lakes Trek."
+    ]
+  },
+  pahalgam: {
+    title: "Pahalgam",
+    district: "Anantnag District",
+    desc: "The 'Valley of Shepherds' is a picturesque hill station at the confluence of the Lidder River and Sheshnag Lake. It serves as the base camp for the holy Amarnath Yatra. The valley is famous for its vast green meadows, pine forests, and pristine river waters.",
+    reach: {
+      airport: "90 km (approx 2 hr 30 min) via NH44.",
+      train: "80 km (approx 2 hr) from Srinagar Station (Closest station is Anantnag: 45km).",
+      jammu: "255 km (approx 7 hrs) via NH44."
+    },
+    activities: [
+        "Visit Betaab Valley, Aru Valley, and Chandanwari.",
+        "River Rafting in the Lidder River.",
+        "Pony ride to Baisaran (Mini Switzerland).",
+        "Golfing at the Pahalgam Golf Course.",
+        "Picnic at Lidder Amusement Park.",
+        "Visit the ancient Mamaleshwar Temple."
+    ]
+  },
+  dal: {
+    title: "Dal Lake",
+    district: "Srinagar District",
+    desc: "The 'Jewel in the crown of Kashmir', Dal Lake is an urban lake that is the center of Srinagar's tourist activity. It is famous for its wooden Houseboats, Shikaras, and the Floating Market. The lake is lined by Mughal gardens and offers spectacular sunrise and sunset views.",
+    reach: {
+      airport: "22 km (approx 45 min).",
+      train: "18 km (approx 40 min) from Srinagar Station.",
+      jammu: "260 km (approx 7-8 hrs) via NH44."
+    },
+    activities: [
+        "Take a relaxing Shikara Ride.",
+        "Stay overnight in a heritage Houseboat.",
+        "Visit the Floating Vegetable Market (Early Morning).",
+        "Visit Char Chinar island.",
+        "Water sports (Jet Skiing, Water Surfing).",
+        "Shopping for handicrafts on the lake."
+    ]
+  },
+  gurez: {
+    title: "Gurez Valley",
+    district: "Bandipora District",
+    desc: "An offbeat, pristine valley located along the Line of Control (LoC). Gurez is known for its unique Dard Shin culture and the pyramid-shaped Habba Khatoon Peak. The Kishanganga river flows through this valley, offering unparalleled tranquility away from the crowds.",
+    reach: {
+      airport: "125 km (approx 6-7 hrs) via Razdan Pass.",
+      train: "135 km (approx 7 hrs) from Srinagar Station.",
+      jammu: "380 km (approx 12 hrs) - Requires overnight stop."
+    },
+    activities: [
+        "View the majestic Habba Khatoon Peak.",
+        "Visit Dawar village and explore local culture.",
+        "Fishing and Camping by Kishanganga River.",
+        "Visit the Khandyal Viewpoint.",
+        "Drive through the scenic Razdan Pass."
+    ]
+  },
+  yusmarg: {
+    title: "Yusmarg",
+    district: "Budgam District",
+    desc: "Known as the 'Meadow of Jesus', Yusmarg is a quiet destination with vast green pastures surrounded by pine trees. It is less commercialized than other hill stations, making it perfect for those seeking silence and raw nature.",
+    reach: {
+      airport: "48 km (approx 1 hr 45 min) via Charar-i-Sharief.",
+      train: "52 km (approx 2 hrs) from Srinagar Station.",
+      jammu: "300 km (approx 8-9 hrs)."
+    },
+    activities: [
+        "Trek to the blue water Nilnag Lake (4km trek).",
+        "Pony Riding on the meadows.",
+        "Picnic by the Doodh Ganga river.",
+        "Visit Charar-i-Sharief Shrine nearby.",
+        "Nature photography and bird watching."
+    ]
+  },
+  doodhpathri: {
+    title: "Doodhpathri",
+    district: "Budgam District",
+    desc: "The 'Valley of Milk', named after the frothy white water of the Shaliganga river flowing through the lush green meadows. It is a bowl-shaped valley that remains green even in peak summer, offering a cool retreat.",
+    reach: {
+      airport: "42 km (approx 1 hr 30 min) via Khan Sahib.",
+      train: "45 km (approx 1 hr 40 min) from Srinagar Station.",
+      jammu: "290 km (approx 8 hrs)."
+    },
+    activities: [
+        "Camping on the vast meadows.",
+        "Relaxing by the Shaliganga river.",
+        "Pony rides to the upper meadows.",
+        "ATV (All Terrain Vehicle) rides.",
+        "Family picnics."
+    ]
+  },
+  bangus: {
+    title: "Bangus Valley",
+    district: "Kupwara District",
+    desc: "A hidden gem and biosphere reserve, Bangus offers some of the most untouched natural beauty in Kashmir. It is divided into Bod Bangus (Big) and Lokut Bangus (Small). The valley is a carpet of green surrounded by Shamsbari mountain range.",
+    reach: {
+      airport: "110 km (approx 4 hrs) via Handwara.",
+      train: "120 km (approx 4.5 hrs) from Srinagar Station (Nearest station Baramulla: 65km).",
+      jammu: "360 km (approx 10-11 hrs)."
+    },
+    activities: [
+        "Eco-tourism and pristine Camping.",
+        "Trekking in the dense forests.",
+        "Bird Watching and Flora exploration.",
+        "Interacting with local Gujjar shepherds.",
+        "Photography of untouched landscapes."
+    ]
+  },
+  aharbal: {
+    title: "Aharbal Waterfall",
+    district: "Kulgam District",
+    desc: "Known as the 'Niagara Falls of Kashmir', Aharbal is where the Veshu River falls noisily 25 meters down into a narrow gorge. The surrounding area is forested and offers great spots for hiking.",
+    reach: {
+      airport: "70 km (approx 2 hr 15 min) via Pulwama/Shopian.",
+      train: "65 km (approx 2 hrs) from Srinagar Station.",
+      jammu: "240 km (approx 6-7 hrs) via Mughal Road (Seasonal)."
+    },
+    activities: [
+        "View the majestic Waterfall from the fence.",
+        "Trek to Kounsarnag Lake (multi-day trek).",
+        "Riverside Picnics.",
+        "Visit the fossil sites nearby.",
+        "Photography of the gorge."
+    ]
+  },
+  verinag: {
+    title: "Verinag",
+    district: "Anantnag District",
+    desc: "Verinag is famous for its Mughal Garden built by Emperor Jahangir and the octagonal spring which is the main source of the Jhelum River. The deep blue water of the spring is calm and mesmerizing.",
+    reach: {
+      airport: "80 km (approx 2 hr 15 min) via NH44.",
+      train: "70 km (approx 1 hr 45 min) from Srinagar Station.",
+      jammu: "185 km (approx 5 hrs) - It is the first major spot after Jawahar Tunnel."
+    },
+    activities: [
+        "Walk through the Mughal Garden.",
+        "View the Octagonal Spring.",
+        "Relax under the Chinar trees.",
+        "Visit the arcade surrounding the spring."
+    ]
+  },
+  kokernag: {
+    title: "Kokernag",
+    district: "Anantnag District",
+    desc: "Kokernag is famous for its botanical gardens and the largest fresh water spring in Kashmir, which gushes out in the form of a claw (Koker means Chicken, Nag means spring). The garden is famous for its roses and trout farm.",
+    reach: {
+      airport: "90 km (approx 2 hr 30 min) via Anantnag.",
+      train: "80 km (approx 2 hr 15 min) from Srinagar Station.",
+      jammu: "245 km (approx 7 hrs)."
+    },
+    activities: [
+        "Visit the Botanical Garden and Rose Garden.",
+        "See the fresh water spring formation.",
+        "Buy fresh Trout fish from the fisheries department.",
+        "Camping and Picnic."
+    ]
+  },
+  manasbal: {
+    title: "Manasbal Lake",
+    district: "Ganderbal District",
+    desc: "The deepest lake in India, Manasbal is famous for its lotus blooms during summer (July-August). It is a birdwatcher's paradise and offers a much quieter experience than Dal Lake. It is surrounded by three villages and the ruins of a 17th-century fort.",
+    reach: {
+      airport: "35 km (approx 1 hr).",
+      train: "40 km (approx 1 hr 15 min) from Srinagar Station.",
+      jammu: "290 km (approx 8 hrs)."
+    },
+    activities: [
+        "Shikara ride to see Lotus blooms.",
+        "Bird Watching (Waterfowls).",
+        "Visit the Mughal garden 'Jaroka Bagh'.",
+        "Explore the ruins of the Darogabagh Fort."
+    ]
+  },
+  wular: {
+    title: "Wular Lake",
+    district: "Bandipora District",
+    desc: "One of the largest fresh water lakes in Asia, Wular acts as a natural flood reservoir for the Jhelum River. It is famous for its fish produce and the small island 'Zaina Lank' in the center built by King Zain-ul-Abidin.",
+    reach: {
+      airport: "60 km (approx 1 hr 45 min).",
+      train: "65 km (approx 2 hrs) from Srinagar Station.",
+      jammu: "315 km (approx 9 hrs)."
+    },
+    activities: [
+        "Boating and Fishing.",
+        "Bird Watching (Migratory birds).",
+        "Visit the Wular Vintage Park for panoramic views.",
+        "Sunset Photography."
+    ]
+  },
+  tosamaidan: {
+    title: "Tosa Maidan",
+    district: "Budgam District",
+    desc: "A vast meadow historically used by Mughals to reach Poonch, and later by the army as a firing range (now cleared and open). It is a huge, flat green pasture surrounded by dense forests, often called the 'King of Meadows'.",
+    reach: {
+      airport: "65 km (approx 2 hr 30 min) via Khag.",
+      train: "70 km (approx 2 hr 45 min) from Srinagar Station.",
+      jammu: "310 km (approx 9 hrs)."
+    },
+    activities: [
+        "Adventure Trekking and Hiking.",
+        "Camping in the wild.",
+        "Off-road driving.",
+        "Exploration of historical routes."
+    ]
+  },
+  naranag: {
+    title: "Naranag",
+    district: "Ganderbal District",
+    desc: "Known for its ancient Shiva temple ruins built by King Lalitaditya Muktapida in the 8th century. It is located in a dense forest and serves as the base camp for the trek to the high-altitude Gangabal Lake.",
+    reach: {
+      airport: "55 km (approx 1 hr 45 min).",
+      train: "60 km (approx 2 hrs) from Srinagar Station.",
+      jammu: "310 km (approx 8-9 hrs)."
+    },
+    activities: [
+        "Visit the ancient Temple Ruins (ASI protected).",
+        "Trek to Gangabal and Nandkol Lakes.",
+        "Trout fishing in the Wangath river.",
+        "Nature photography."
+    ]
+  },
+  aru: {
+    title: "Aru Valley",
+    district: "Anantnag District",
+    desc: "A scenic village located 12km from Pahalgam, Aru is famous for its scenic meadows and as a starting point for the Kolahoi Glacier and Tarsar Marsar treks. It is a quiet, idyllic village perfect for peace lovers.",
+    reach: {
+      airport: "102 km (approx 3 hrs) via Pahalgam.",
+      train: "92 km (approx 2 hr 30 min) from Srinagar Station.",
+      jammu: "265 km (approx 7.5 hrs)."
+    },
+    activities: [
+        "Trek to Tarsar Marsar Lakes.",
+        "Day hike to Green Top.",
+        "Horse Riding in the meadows.",
+        "Trout fishing (with permit)."
+    ]
+  },
+  betaab: {
+    title: "Betaab Valley",
+    district: "Anantnag District",
+    desc: "Originally called Hajan Valley, it was renamed after the Bollywood movie 'Betaab' was shot here. It features crystal clear water from the Lidder river flowing over rocks, surrounded by tall deodar trees and mountains.",
+    reach: {
+      airport: "95 km (approx 2 hr 45 min) via Pahalgam.",
+      train: "85 km (approx 2 hr 15 min) from Srinagar Station.",
+      jammu: "260 km (approx 7 hrs)."
+    },
+    activities: [
+        "Riverside Walk and Photography.",
+        "Picnic on the banks of Lidder.",
+        "Zip-lining.",
+        "Relaxation in the park."
+    ]
+  }
+};
+
+/* ---------- MODAL LOGIC ---------- */
+function openDestination(key) {
+  const data = destinations[key];
+  if(!data) return;
+
+  document.getElementById("destTitle").innerText = data.title;
+  document.getElementById("destDistrict").innerText = data.district;
+  document.getElementById("destDesc").innerText = data.desc;
+
+  // Populate Travel Info
+  document.getElementById("destAirport").innerText = data.reach.airport;
+  document.getElementById("destTrain").innerText = data.reach.railway;
+  document.getElementById("destJammu").innerText = data.reach.jammu;
+
+  const list = document.getElementById("destList");
+  list.innerHTML = ""; // Clear old list
+  
+  data.activities.forEach(act => {
+    const li = document.createElement("li");
+    li.innerText = act;
+    list.appendChild(li);
+  });
+
+  const modal = document.getElementById("destinationModal");
+  modal.style.display = "flex";
+}
+
+function closeDestination() {
+  document.getElementById("destinationModal").style.display = "none";
+}
+
+// Close modal if user clicks outside the box
+window.onclick = function(event) {
+  const modal = document.getElementById("destinationModal");
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
 
 /* ---------- LIVE COUNTERS ---------- */
 async function loadStats() {
@@ -159,7 +547,7 @@ async function loadStats() {
     animateCounter("confirmedBookings", data.confirmed);
     animateCounter("totalSeats", data.totalSeats);
     animateCounter("availableSeats", data.availableSeats);
-  } catch (err) {
+  } catch {
     console.error("Stats load failed");
   }
 }
@@ -181,312 +569,7 @@ function animateCounter(id, target) {
 }
 
 loadStats();
-
-
-
-
-/* ---------- DESTINATIONS : WITH DISTRICT INFO ---------- */
-const destinations = {
-
-  gulmarg: {
-    title: "Gulmarg",
-    district: "Baramulla",
-    desc: "Gulmarg (Meadow of Flowers) is Kashmir’s premier hill station, globally renowned for skiing, alpine scenery, and the highest cable car in Asia.",
-    list: [
-      "Gulmarg Gondola (Asia’s highest cable car)",
-      "Skiing & snowboarding (winter)",
-      "Snow biking & sledging",
-      "World’s highest golf course (summer)",
-      "Khilanmarg meadow excursion",
-      "Trekking to Alpather Lake",
-      "Alpine photography",
-      "Winter festivals"
-    ]
-  },
-
-  sonamarg: {
-    title: "Sonamarg",
-    district: "Ganderbal",
-    desc: "Sonamarg, the Meadow of Gold, is a high-altitude valley surrounded by glaciers and towering peaks, serving as the gateway to Ladakh.",
-    list: [
-      "Thajiwas Glacier trek",
-      "Horse riding through meadows",
-      "Sindh River sightseeing",
-      "Baltal Valley visit",
-      "Camping near glaciers",
-      "Photography of snow-fed valleys",
-      "Short alpine treks",
-      "Gateway to Ladakh route"
-    ]
-  },
-
-  pahalgam: {
-    title: "Pahalgam",
-    district: "Anantnag",
-    desc: "Pahalgam is a serene riverside town in Lidder Valley, famous for lush meadows, pine forests, and pilgrimage routes.",
-    list: [
-      "Betaab Valley",
-      "Aru Valley",
-      "Baisaran (Mini Switzerland)",
-      "River Lidder walks",
-      "Horse riding",
-      "Amarnath Yatra base camp",
-      "Nature camping",
-      "Local sightseeing"
-    ]
-  },
-
-  dal: {
-    title: "Dal Lake",
-    district: "Srinagar",
-    desc: "Dal Lake is the iconic heart of Srinagar, known for floating gardens, houseboats, and traditional shikara rides.",
-    list: [
-      "Shikara rides",
-      "Houseboat stays",
-      "Floating vegetable market",
-      "Char Chinar island",
-      "Lakefront photography",
-      "Cultural experiences",
-      "Sunset views",
-      "Local handicraft shopping"
-    ]
-  },
-
-  gurez: {
-    title: "Gurez Valley",
-    district: "Bandipora",
-    desc: "Gurez Valley is a remote Himalayan paradise near the Line of Control, known for untouched beauty and Dard-Shina culture.",
-    list: [
-      "Kishanganga River",
-      "Habba Khatoon Peak",
-      "Dard tribe culture",
-      "Wooden village houses",
-      "Nature walks",
-      "Stargazing",
-      "Eco-tourism",
-      "Offbeat travel"
-    ]
-  },
-
-  yusmarg: {
-    title: "Yusmarg",
-    district: "Budgam",
-    desc: "Yusmarg is a tranquil meadow surrounded by pine forests, ideal for peaceful retreats.",
-    list: [
-      "Meadow walks",
-      "Doodhganga River",
-      "Forest hikes",
-      "Horse riding",
-      "Bird watching",
-      "Photography",
-      "Picnics",
-      "Meditation & relaxation"
-    ]
-  },
-
-  doodhpathri: {
-    title: "Doodhpathri",
-    district: "Budgam",
-    desc: "Doodhpathri is a lush green valley known for its milky streams flowing through expansive grasslands.",
-    list: [
-      "Grassland exploration",
-      "Milky stream photography",
-      "Picnics",
-      "Horse riding",
-      "Light trekking",
-      "Nature relaxation",
-      "Summer retreats",
-      "Day trips"
-    ]
-  },
-
-  bangus: {
-    title: "Bangus Valley",
-    district: "Kupwara",
-    desc: "Bangus Valley is one of Kashmir’s most untouched alpine meadows, offering pristine silence and raw beauty.",
-    list: [
-      "Upper & Lower Bangus meadows",
-      "Wildflower photography",
-      "Bird watching",
-      "Camping",
-      "Nature walks",
-      "Offbeat adventure",
-      "Landscape photography",
-      "Eco-tourism"
-    ]
-  },
-
-  aharbal: {
-    title: "Aharbal Waterfall",
-    district: "Kulgam",
-    desc: "Aharbal Waterfall, often called the Niagara of Kashmir, is a powerful cascade on the Veshaw River.",
-    list: [
-      "Waterfall viewpoints",
-      "Nature walks",
-      "Photography",
-      "Picnic spots",
-      "River-side relaxation",
-      "Monsoon sightseeing",
-      "Short treks",
-      "Scenic exploration"
-    ]
-  },
-
-  verinag: {
-    title: "Verinag",
-    district: "Anantnag",
-    desc: "Verinag is the historic source of the Jhelum River, surrounded by Mughal-era gardens.",
-    list: [
-      "Jhelum River source",
-      "Mughal garden",
-      "Historical architecture",
-      "Photography",
-      "Nature walks",
-      "Picnics",
-      "Cultural heritage",
-      "Educational tours"
-    ]
-  },
-
-  kokernag: {
-    title: "Kokernag",
-    district: "Anantnag",
-    desc: "Kokernag is famous for freshwater springs, gardens, and relaxing surroundings.",
-    list: [
-      "Spring gardens",
-      "Botanical park",
-      "Family picnics",
-      "Nature photography",
-      "Health tourism",
-      "Quiet retreats",
-      "Fruit orchards",
-      "Relaxation tourism"
-    ]
-  },
-
-  manasbal: {
-    title: "Manasbal Lake",
-    district: "Ganderbal",
-    desc: "Manasbal is the deepest lake in Kashmir, famous for lotus blooms and serene surroundings.",
-    list: [
-      "Lotus gardens",
-      "Bird watching",
-      "Boating",
-      "Sunrise views",
-      "Nature walks",
-      "Photography",
-      "Educational tours",
-      "Peaceful picnics"
-    ]
-  },
-
-  wular: {
-    title: "Wular Lake",
-    district: "Bandipora",
-    desc: "Wular Lake is one of Asia’s largest freshwater lakes and a major wetland ecosystem.",
-    list: [
-      "Migratory bird watching",
-      "Wetland photography",
-      "Boat rides",
-      "Sunset views",
-      "Fishing villages",
-      "Eco-tourism",
-      "Nature education",
-      "Conservation tours"
-    ]
-  },
-
-  tosamaidan: {
-    title: "Tosa Maidan",
-    district: "Budgam",
-    desc: "Tosa Maidan is a vast high-altitude meadow surrounded by snow peaks.",
-    list: [
-      "Camping",
-      "Star gazing",
-      "High-altitude trekking",
-      "Meadow photography",
-      "Nature exploration",
-      "Adventure picnics",
-      "Offbeat tourism",
-      "Landscape views"
-    ]
-  },
-
-  naranag: {
-    title: "Naranag",
-    district: "Ganderbal",
-    desc: "Naranag is an ancient temple complex and base camp for alpine treks.",
-    list: [
-      "Ancient temple ruins",
-      "Gangbal Lake trek",
-      "Mount Harmukh trek",
-      "Heritage photography",
-      "Camping",
-      "Religious tourism",
-      "Adventure trekking",
-      "Nature walks"
-    ]
-  },
-
-  aru: {
-    title: "Aru Valley",
-    district: "Anantnag",
-    desc: "Aru Valley is a scenic village and major base camp for trekking routes.",
-    list: [
-      "Trekking base camp",
-      "Horse riding",
-      "Camping",
-      "Snow activities",
-      "Village tourism",
-      "Photography",
-      "Nature stays",
-      "Mountain hikes"
-    ]
-  },
-
-  betaab: {
-    title: "Betaab Valley",
-    district: "Anantnag",
-    desc: "Betaab Valley is a lush cinematic valley surrounded by snow peaks and rivers.",
-    list: [
-      "Film shooting locations",
-      "Photography",
-      "River-side walks",
-      "Picnic spots",
-      "Family sightseeing",
-      "Nature relaxation",
-      "Short hikes",
-      "Landscape videography"
-    ]
-  }
-
-};
-
-
-
-
-
-
-function openDestination(key){
-  const d=destinations[key];
-  document.getElementById("destTitle").innerText=d.title;
-   document.getElementById("destDistrict").innerText =
-    "📍 District: " + d.district;
-  document.getElementById("destDesc").innerText=d.desc;
-  const ul=document.getElementById("destList");
-  ul.innerHTML="";
-  d.list.forEach(i=>{
-    const li=document.createElement("li");
-    li.innerText="✔ "+i;
-    ul.appendChild(li);
-  });
-  document.getElementById("destinationModal").style.display="flex";
-}
-function closeDestination(){
-  document.getElementById("destinationModal").style.display="none";
-}
 </script>
 
-<div class="snow"></div>
 </body>
 </html>

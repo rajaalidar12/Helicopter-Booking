@@ -9,6 +9,13 @@ const bookingSchema = new mongoose.Schema(
     email: String,
     address: String,
 
+    ownerContact: {
+  type: String,
+  required: true,
+  index: true
+},
+
+
     from: String,
     to: String,
 

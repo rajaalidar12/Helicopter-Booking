@@ -4,36 +4,53 @@ module.exports = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
-      return res.status(401).json({ message: "Passenger not authenticated" });
+    // ❌ No Authorization header
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        message: "Passenger not authenticated"
+      });
     }
 
-    let token;
-
-    if (authHeader.startsWith("Bearer ")) {
-      token = authHeader.split(" ")[1];
-    } else {
-      token = authHeader;
-    }
+    // ✅ Extract token
+    const token = authHeader.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ message: "Malformed token" });
+      return res.status(401).json({
+        message: "Malformed token"
+      });
     }
 
+    // ✅ Verify token
     const decoded = jwt.verify(
       token,
       process.env.JWT_PASSENGER_SECRET
     );
 
+    // 🔐 HARD VALIDATIONS
     if (decoded.role !== "PASSENGER") {
-      return res.status(403).json({ message: "Invalid passenger token" });
+      return res.status(403).json({
+        message: "Invalid passenger role"
+      });
     }
 
-    req.passenger = decoded;
+    if (!decoded.contact) {
+      return res.status(401).json({
+        message: "Invalid passenger token"
+      });
+    }
+
+    // ✅ Attach SAFE passenger object
+    req.passenger = {
+      contact: decoded.contact,
+      role: decoded.role
+    };
+
     next();
 
   } catch (err) {
     console.error("Passenger auth error:", err.message);
-    return res.status(401).json({ message: "Passenger not authenticated" });
+    return res.status(401).json({
+      message: "Passenger not authenticated"
+    });
   }
 };

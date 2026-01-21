@@ -112,3 +112,12 @@ button:disabled {
   color: #b10000;
   border: 1px solid #ffb3b3;
 }
+
+/* ===== FORCE FORM VISIBILITY ===== */
+.manage-wrapper input,
+.manage-wrapper button {
+  all: revert;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}

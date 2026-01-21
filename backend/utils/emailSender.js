@@ -1,29 +1,26 @@
 const nodemailer = require("nodemailer");
+const fs = require("fs"); // Import FS to check file existence
 
 /* ===============================
-   SMTP CONFIG (PORT 587 - SAFE)
+   SMTP CONFIG (MATCHING DEBUG SCRIPT)
    =============================== */
+// We use the exact config that worked in your debug script
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,              // ✅ IMPORTANT
-  secure: false,          // ❌ must be false for 587
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  },
-  tls: {
-    rejectUnauthorized: false
   }
 });
 
 /* ===============================
-   VERIFY CONNECTION ON START
+   VERIFY CONNECTION
    =============================== */
 transporter.verify((error, success) => {
   if (error) {
-    console.error("❌ Email server connection failed:", error.message);
+    console.error("❌ Email Service Error:", error.message);
   } else {
-    console.log("✅ Email server ready (SMTP 587)");
+    console.log("✅ Email Service Ready (Gmail Mode)");
   }
 });
 
@@ -31,45 +28,62 @@ transporter.verify((error, success) => {
    SEND OTP EMAIL
    =============================== */
 async function sendOTPEmail(email, otp) {
-  await transporter.sendMail({
-    from: `"Kashmir Heli Services" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: "Your OTP for Kashmir Heli Services",
-    html: `
-      <h2>🔐 OTP Verification</h2>
-      <p>Your One-Time Password is:</p>
-      <h1>${otp}</h1>
-      <p>This OTP is valid for <b>5 minutes</b>.</p>
-      <p>Do not share this OTP with anyone.</p>
-    `
-  });
+  try {
+    await transporter.sendMail({
+      from: `"Kashmir Heli Services" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your OTP for Kashmir Heli Services",
+      html: `
+        <h2>🔐 OTP Verification</h2>
+        <p>Your One-Time Password is:</p>
+        <h1>${otp}</h1>
+        <p>This OTP is valid for <b>5 minutes</b>.</p>
+      `
+    });
+    console.log(`✅ OTP sent to ${email}`);
+  } catch (err) {
+    console.error("❌ OTP Email Failed:", err.message);
+  }
 }
 
 /* ===============================
-   SEND TICKET EMAIL (PDF)
+   SEND TICKET EMAIL (ROBUST)
    =============================== */
 async function sendTicketEmail(email, ticketNumber, pdfPath) {
-  await transporter.sendMail({
-    from: `"Kashmir Heli Services" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: `Your Helicopter Ticket (${ticketNumber})`,
-    html: `
-      <h2>✈️ Booking Confirmed</h2>
-      <p>Your ticket number: <b>${ticketNumber}</b></p>
-      <p>Please find your ticket PDF attached.</p>
-    `,
-    attachments: [
-      {
-        filename: `Ticket-${ticketNumber}.pdf`,
-        path: pdfPath
-      }
-    ]
-  });
+  try {
+    console.log(`📧 Preparing to send ticket to: ${email}`);
+    console.log(`📎 Attaching file from: ${pdfPath}`);
+
+    // Check if PDF actually exists before sending
+    if (!fs.existsSync(pdfPath)) {
+      throw new Error(`PDF file not found at path: ${pdfPath}`);
+    }
+
+    await transporter.sendMail({
+      from: `"Kashmir Heli Services" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: `Your Helicopter Ticket (${ticketNumber})`,
+      html: `
+        <h2>✈️ Booking Confirmed</h2>
+        <p>Your ticket number: <b>${ticketNumber}</b></p>
+        <p>Please find your ticket PDF attached.</p>
+        <p>Thank you for choosing Kashmir Heli Services.</p>
+      `,
+      attachments: [
+        {
+          filename: `Ticket-${ticketNumber}.pdf`,
+          path: pdfPath // Nodemailer handles the stream automatically
+        }
+      ]
+    });
+    console.log("✅ Ticket Email Sent Successfully!");
+
+  } catch (err) {
+    console.error("❌ Ticket Email Failed:", err.message);
+    // We throw the error so server.js knows it failed, but usually we just log it
+  }
 }
 
-/* ===============================
-   EXPORTS
-   =============================== */
 module.exports = {
   sendOTPEmail,
   sendTicketEmail

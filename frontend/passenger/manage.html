@@ -1,50 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Kashmir Heli Services | Manage Booking</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Manage Booking | Kashmir Heli Services</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="../css/passenger.css">
+<link rel="stylesheet" href="../css/passenger.css">
+
+<style>
+body {
+  background:#eef2f7;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.card {
+  background:#fff;
+  width:95%;
+  max-width:500px;
+  padding:25px;
+  border-radius:14px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.2);
+}
+
+h2 { text-align:center; margin-bottom:8px; }
+p { text-align:center; color:#666; }
+
+input {
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button {
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#1da1f2;
+  color:white;
+  cursor:pointer;
+}
+
+button:hover { opacity:.9; }
+
+.actions { display:none; gap:8px; margin-top:12px; }
+.actions button { flex:1; }
+
+.download { background:#2ecc71; }
+.modify { background:#f39c12; }
+.cancel { background:#e74c3c; }
+
+#modifyBox { display:none; margin-top:12px; }
+</style>
 </head>
+
 <body>
 
-<div class="container">
+<div class="card">
+  <h2>🔐 Manage Booking</h2>
+  <p>Only logged-in passengers can manage their booking</p>
 
-  <h1>🔍 Manage Your Booking</h1>
-  <p class="subtitle">View booking details or download your ticket PDF</p>
+  <input id="ticketNumber" placeholder="HC-XXXXXX">
+  <button onclick="loadBooking()">View Booking</button>
 
-  <!-- TICKET INPUT -->
-  <div class="form-group">
-    <input
-      id="ticketNumber"
-      type="text"
-      placeholder="Enter Ticket Number (HC-XXXXXX)"
-    >
-    <button onclick="loadBooking()">View Booking</button>
+  <div id="bookingDetails"></div>
+
+  <div class="actions" id="actionButtons">
+    <button class="download" onclick="downloadTicket()">📄 Download</button>
+    <button class="modify" onclick="showModify()">✏️ Modify</button>
+    <button class="cancel" onclick="cancelBooking()">❌ Cancel</button>
   </div>
 
-  <!-- BOOKING DETAILS -->
-  <div id="bookingDetails" class="booking-details"></div>
+  <div id="modifyBox">
+    <input type="date" id="newDate">
+    <input type="text" id="newPhone" placeholder="New phone (optional)">
+    <input type="email" id="newEmail" placeholder="New email (optional)">
+    <button onclick="submitModify()">Save Changes</button>
+  </div>
 
-  <!-- DOWNLOAD BUTTON (HIDDEN INITIALLY) -->
-  <button
-    id="downloadBtn"
-    class="download-btn"
-    style="display:none;"
-    onclick="downloadTicket()"
-  >
-    📄 Download Ticket PDF
-  </button>
-
-  <!-- BACK / LOGOUT -->
-  <div style="margin-top: 20px;">
-    <a href="book.html">← Back to Booking</a> |
+  <p style="text-align:center;margin-top:12px;">
+    <a href="book.html">← Back</a> |
     <a href="#" onclick="passengerLogout()">Logout</a>
-  </div>
-
+  </p>
 </div>
 
 <script src="../js/passenger.js"></script>
+
+<script>
+if(!localStorage.getItem("passengerToken")){
+  alert("Login first");
+  location.href="login.html";
+}
+</script>
+
 </body>
 </html>

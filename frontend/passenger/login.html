@@ -5,125 +5,193 @@
   <title>Passenger Login | Kashmir Heli Services</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Shared main style -->
-  <link rel="stylesheet" href="../style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Page specific style -->
   <style>
+    /* ================= RESET & VARIABLES ================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
     body {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      /* 🏔️ BREATHTAKING KASHMIR THEME BACKGROUND (Dal Lake Sunset) */
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1566837945700-30057527ade0?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
     }
 
+    /* ================= GLASS CARD ================= */
     .login-card {
-      background: rgba(255, 255, 255, 0.96);
-      padding: 40px;
-      border-radius: 18px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-      animation: fadeIn 0.7s ease;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 3.5rem 2.5rem;
+      border-radius: 24px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      animation: slideUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* ================= TYPOGRAPHY ================= */
+    .icon-header {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
     }
 
     .login-card h2 {
-      text-align: center;
-      margin-bottom: 10px;
-      color: #003366;
+      color: #1f2937;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
     }
 
     .login-card p {
-      text-align: center;
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 25px;
+      color: #6b7280;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    /* ================= INPUTS ================= */
+    .input-group {
+      margin-bottom: 1.2rem;
+      text-align: left;
     }
 
     .login-card input {
       width: 100%;
-      padding: 14px;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 15px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      color: #374151;
     }
 
-    .login-card button {
+    .login-card input:focus {
+      outline: none;
+      border-color: #0077b6;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(0, 119, 182, 0.15);
+    }
+
+    /* ================= BUTTONS ================= */
+    button {
       width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: 10px;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 12px;
       cursor: pointer;
       border: none;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .send-btn {
-      background: #1da1f2;
+      background: linear-gradient(135deg, #0077b6, #023e8a);
       color: #fff;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
     }
 
     .send-btn:hover {
-      box-shadow: 0 8px 20px rgba(29,161,242,0.5);
       transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(0, 119, 182, 0.5);
     }
 
     .verify-btn {
-      background: #28a745;
+      background: linear-gradient(135deg, #2a9d8f, #264653);
       color: #fff;
+      margin-top: 10px;
+      box-shadow: 0 8px 20px rgba(42, 157, 143, 0.3);
     }
 
     .verify-btn:hover {
-      box-shadow: 0 8px 20px rgba(40,167,69,0.5);
       transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(42, 157, 143, 0.5);
     }
 
+    /* ================= MESSAGES & HINTS ================= */
     .msg {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
+      margin-top: 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      min-height: 1.5em; /* Prevents layout jump */
     }
 
     .hint {
-      font-size: 12px;
-      color: #777;
-      text-align: center;
-      margin-top: 10px;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-top: 15px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      padding-top: 15px;
+    }
+
+    /* Divider for visual separation */
+    .divider {
+      height: 1px;
+      background: #e5e7eb;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
 
 <div class="login-card">
-  <h2>🔐 Passenger Login</h2>
-  <p>Login securely using OTP sent to your Email or Phone</p>
+  <div class="icon-header">🚁</div>
+  <h2>Welcome Back</h2>
+  <p>Secure login for Kashmir Heli Services</p>
 
-  <input
-    id="contact"
-    placeholder="Email or Mobile Number"
-    autocomplete="off"
-  >
+  <div class="input-group">
+    <input
+      id="contact"
+      placeholder="📧 Email or 📱 Phone Number"
+      autocomplete="off"
+    >
+  </div>
 
   <button class="send-btn" onclick="sendOTP()">
-    📩 Send OTP
+    <span>📩</span> Send OTP
   </button>
 
-  <input
-    id="otp"
-    placeholder="Enter 6-digit OTP"
-    autocomplete="one-time-code"
-  >
+  <div class="divider"></div>
+
+  <div class="input-group">
+    <input
+      id="otp"
+      placeholder="🔑 Enter 6-digit OTP"
+      autocomplete="one-time-code"
+      maxlength="6"
+      style="letter-spacing: 4px; font-weight: bold; text-align: center;"
+    >
+  </div>
 
   <button class="verify-btn" onclick="verifyOTP()">
-    ✅ Verify & Continue
+    <span>✅</span> Verify & Login
   </button>
 
   <p id="msg" class="msg"></p>
 
   <p class="hint">
-    OTP is valid for 5 minutes. Do not share it with anyone.
+    Secure OTP Authentication • Valid for 5 minutes
   </p>
 </div>
 
@@ -134,10 +202,12 @@ async function sendOTP() {
 
   if (!contact) {
     msg.innerText = "❌ Please enter email or phone number";
+    msg.style.color = "#ef233c";
     return;
   }
 
   msg.innerText = "⏳ Sending OTP...";
+  msg.style.color = "#0077b6";
 
   try {
     const res = await fetch("http://localhost:4000/passenger-auth/send-otp", {
@@ -148,9 +218,12 @@ async function sendOTP() {
 
     const data = await res.json();
     msg.innerText = data.message || "OTP sent";
+    if (res.ok) msg.style.color = "#2a9d8f";
+    else msg.style.color = "#ef233c";
 
   } catch {
     msg.innerText = "❌ Server error. Try again.";
+    msg.style.color = "#ef233c";
   }
 }
 
@@ -161,10 +234,12 @@ async function verifyOTP() {
 
   if (!otp) {
     msg.innerText = "❌ Please enter OTP";
+    msg.style.color = "#ef233c";
     return;
   }
 
   msg.innerText = "🔐 Verifying OTP...";
+  msg.style.color = "#0077b6";
 
   try {
     const res = await fetch("http://localhost:4000/passenger-auth/verify-otp", {
@@ -177,13 +252,19 @@ async function verifyOTP() {
 
     if (res.ok) {
       localStorage.setItem("passengerToken", data.token);
-      window.location.href = "book.html"; // ✅ Correct flow
+      msg.innerText = "✅ Success! Redirecting...";
+      msg.style.color = "#2a9d8f";
+      setTimeout(() => {
+        window.location.href = "dashboard.html"; 
+      }, 1000);
     } else {
       msg.innerText = "❌ " + data.message;
+      msg.style.color = "#ef233c";
     }
 
   } catch {
     msg.innerText = "❌ Verification failed";
+    msg.style.color = "#ef233c";
   }
 }
 </script>
