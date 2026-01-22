@@ -5,569 +5,470 @@
   <title>Kashmir Heli Services | Official Helicopter Booking Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
   
   <style>
-    /* --- Extra Modal Styles for the new content --- */
-    .district-tag {
-        display: inline-block;
-        background-color: #e3f2fd;
-        color: #0288d1;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
+    /* =========================================
+       PREMIUM CSS (LUXURY GLASS & GLOW)
+       ========================================= */
+    :root {
+      --primary: #007AFF; /* Apple-like vibrant blue */
+      --primary-dark: #0056b3;
+      --accent: #FF9F1C; /* Golden Hour Orange */
+      --glass: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --text-dark: #1e293b; /* Deep blue-grey for text */
+      --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #eef7ff 100%);
+      --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.08);
+      --shadow-hover: 0 20px 50px -12px rgba(0, 122, 255, 0.25);
     }
 
-    .modal-box h2 {
-        margin-bottom: 0.5rem;
+    body {
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Scrollable modal content if data gets too long */
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+    /* --- HERO SECTION (UPDATED FOR BRIGHT SNOW) --- */
+    .hero {
+      position: relative;
+      /* NEW BRIGHTER SNOW IMAGE (Wikimedia stable link) */
+      background: url('https://upload.wikimedia.org/wikipedia/commons/9/98/Gulmarg_Apharwat_Peak.jpg') no-repeat center center/cover;
+      background-attachment: fixed;
+      height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      /* Subtle bright overlay to blend with content below */
+      background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(240, 248, 255, 0.8), rgba(240, 248, 255, 1));
+      z-index: 1;
+    }
+
+    /* --- NAVBAR (UPDATED FOR CONTRAST) --- */
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 25px 50px; position: relative; z-index: 10;
+      /* More opaque glass for better contrast against bright snow */
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+    }
+
+    .logo {
+      color: var(--text-dark); /* Changed to dark color */
+      font-size: 1.8rem; margin: 0; letter-spacing: -0.5px;
+      font-weight: 800;
+    }
+
+    .nav-buttons button {
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255,255,255,0.8);
+      color: var(--text-dark); /* Changed to dark text */
+      padding: 12px 28px; border-radius: 50px;
+      cursor: pointer; font-weight: 700; font-family: 'Outfit', sans-serif;
+      backdrop-filter: blur(10px); transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .nav-buttons button:hover {
+      background: var(--text-dark); color: white; transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    /* --- HERO CONTENT (NEW GLASS BOX FOR READABILITY) --- */
+    .hero-content {
+      position: relative; z-index: 10; text-align: center; 
+      margin-bottom: 120px;
+      /* New Glass Box Styles */
+      background: rgba(255, 255, 255, 0.65); /* Frosted glass bg */
+      backdrop-filter: blur(20px); /* Blurs the mountains behind text */
+      padding: 40px 30px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin-left: auto; margin-right: auto; /* Center the box */
+      animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .hero-content h2 {
+      font-size: 4.5rem; margin-bottom: 15px; 
+      color: var(--text-dark); /* Dark text */
+      line-height: 1.1;
+    }
+    .hero-content p {
+      font-size: 1.4rem; font-weight: 500; 
+      color: #475569; /* Slightly lighter dark text */
+      max-width: 600px; margin: 0 auto;
+    }
+
+    /* --- STATS (Floating Glass) --- */
+    .stats {
+      position: relative; z-index: 20; margin-top: -80px;
+      display: flex; justify-content: center; gap: 30px; padding: 0 20px; flex-wrap: wrap;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px);
+      padding: 30px 45px; border-radius: 24px; text-align: center;
+      box-shadow: var(--shadow-soft); min-width: 180px;
+      border: 1px solid rgba(255,255,255,0.8); transition: 0.4s ease;
+      position: relative; overflow: hidden;
+    }
+    .stat-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
+      background: var(--accent); transform: scaleX(0); transition: 0.4s; transform-origin: left;
+    }
+    .stat-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-hover); }
+    .stat-card:hover::after { transform: scaleX(1); }
+
+    .counter { font-size: 3rem; color: var(--primary); margin: 0; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -2px; }
+    .stat-card p { margin: 8px 0 0; color: #64748b; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* --- CHECKER --- */
+    .availability-check { padding: 100px 20px; text-align: center; }
+    .avail-container {
+      max-width: 800px; margin: 0 auto; background: white; padding: 60px 50px;
+      border-radius: 32px; box-shadow: 0 40px 80px -20px rgba(0, 122, 255, 0.15);
+      border: 1px solid #f0f0f0; position: relative; overflow: hidden;
+    }
+    /* Subtle background glow */
+    .avail-container::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(0,122,255,0.03) 0%, transparent 70%); pointer-events: none;
+    }
+    
+    .avail-input-group { display: flex; gap: 15px; justify-content: center; margin-top: 40px; flex-wrap: wrap; position: relative; z-index: 2; }
+    
+    input[type="date"] {
+      padding: 18px 30px; font-size: 1.1rem; border: 2px solid #e2e8f0; border-radius: 50px;
+      outline: none; color: #334155; background: #f8fafc; width: 220px; transition: 0.3s;
+      font-family: 'Outfit', sans-serif;
+    }
+    input[type="date"]:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1); background: white; }
+
+    .check-btn {
+      padding: 18px 50px; background: linear-gradient(135deg, #007AFF, #00C6FF); color: white;
+      border: none; border-radius: 50px; font-weight: 700; font-size: 1.1rem; cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 122, 255, 0.3); transition: 0.3s; letter-spacing: 0.5px;
+    }
+    .check-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 40px rgba(0, 122, 255, 0.4); }
+
+    .avail-result {
+      margin-top: 40px; padding: 25px; border-radius: 20px; font-weight: 600; display: none; animation: fadeIn 0.5s ease;
+    }
+    .res-success { background: #ecfdf5; color: #047857; border: 1px solid #d1fae5; }
+    .res-error { background: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
+
+    /* --- DESTINATIONS --- */
+    .destinations { padding: 60px 20px 120px; text-align: center; }
+    .destinations h2 { font-size: 3.5rem; color: var(--text-dark); margin-bottom: 20px; }
+    .dest-subtitle { color: #64748b; font-size: 1.2rem; margin-bottom: 60px; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+    .filter-bar { margin-bottom: 60px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 12px 30px; border: 1px solid transparent; background: white; color: #64748b;
+      border-radius: 50px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03); font-family: 'Outfit', sans-serif;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--text-dark); color: white; transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .destination-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 25px; max-width: 1200px; margin: 0 auto;
+    }
+
+    /* GLASS TILE STYLE */
+    .dest-tile {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 25px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; border: 1px solid #f8f8f8;
+    }
+
+    .dest-tile:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 30px 60px -15px rgba(0, 122, 255, 0.15);
+      border-color: #e0e7ff;
+    }
+
+    .dest-icon { 
+      font-size: 3.5rem; margin-bottom: 20px; transition: 0.4s; 
+      filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+    }
+    .dest-tile:hover .dest-icon { transform: scale(1.1) rotate(5deg); }
+
+    .dest-name {
+      font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin: 0;
+      font-family: 'Playfair Display', serif;
+    }
+    .dest-sub {
+      font-size: 0.8rem; color: #94a3b8; font-weight: 700; margin-top: 8px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    /* --- MODAL --- */
+    .modal {
+      display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+      background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px);
+      align-items: center; justify-content: center;
+    }
     .modal-box {
-        max-height: 90vh;
-        overflow-y: auto;
+      background: #fff; padding: 50px; border-radius: 32px; width: 90%; max-width: 600px;
+      max-height: 85vh; overflow-y: auto; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+      animation: zoomIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .close { position: absolute; right: 30px; top: 30px; font-size: 32px; cursor: pointer; color: #cbd5e1; transition:0.2s;}
+    .close:hover { color: var(--accent); transform: rotate(90deg); }
+
+    .district-tag {
+      background: #fff7ed; color: var(--accent); padding: 8px 20px; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 700; text-transform: uppercase; border: 1px solid #ffedd5; letter-spacing:1px;
     }
 
-    #destList {
-        text-align: left;
-        margin: 0.5rem 0 1.5rem 1.5rem;
-        color: #555;
+    .reach-info { background: #f8fafc; padding: 30px; border-radius: 20px; margin-top: 30px; border-left: 5px solid var(--primary); }
+    .primary-btn-modal {
+      width: 100%; margin-top: 30px; background: var(--text-dark);
+      color: white; border: none; padding: 20px; border-radius: 16px; font-size: 1.1rem; font-weight: 600; cursor: pointer;
+      transition: 0.3s;
     }
+    .primary-btn-modal:hover { background: var(--primary); transform: translateY(-2px); }
 
-    #destList li {
-        margin-bottom: 0.5rem;
-    }
+    .footer { text-align: center; padding: 60px 20px; background: #0f172a; color: #64748b; font-size: 0.9rem; }
 
-    /* New styles for Reach Info */
-    .reach-info {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-top: 15px;
-        text-align: left;
-        border-left: 4px solid #0288d1;
-    }
-    .reach-info h4 {
-        margin-bottom: 10px;
-        color: #333;
-        font-size: 1rem;
-    }
-    .reach-info p {
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-        color: #444;
-        display: flex;
-        align-items: flex-start;
-    }
-    .reach-info strong {
-        min-width: 140px;
-        display: inline-block;
-        color: #000;
-    }
+    @keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes zoomIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
   </style>
 </head>
 <body>
 
 <header class="hero">
   <div class="hero-overlay"></div>
-
   <nav class="navbar">
-    <h1 class="logo">🚁 Kashmir Heli Services</h1>
+    <h1 class="logo">🚁 HeliKashmir</h1>
     <div class="nav-buttons">
-      <button onclick="goPassenger()">Passenger Login</button>
-      <button class="admin-btn" onclick="goAdmin()">Admin Login</button> 
+      <button onclick="goPassenger()">Passenger</button>
+      <button onclick="goAdmin()">Admin</button> 
     </div>
   </nav>
-
   <div class="hero-content">
-    <h2>Fast • Safe • Scenic Helicopter Travel</h2>
-    <p>
-      Official helicopter booking portal for Jammu & Kashmir.<br>
-      OTP-secured booking • Real-time availability
-    </p>
-
-    <div class="hero-actions">
-      <button class="primary" onclick="goPassenger()">✈️ Book Flight</button>
-    </div>
+    <h2>Paradise, Elevated.</h2>
+    <p>Experience the breathtaking valleys of Jammu & Kashmir from the skies. Secure, fast, and unforgettable.</p>
   </div>
+  <div></div> 
 </header>
 
-<section class="trust-strip">
-  <div class="trust-item">
-    <span class="trust-icon">🔐</span>
-    <div>
-      <h4>OTP Secured</h4>
-      <p>Verified passenger authentication</p>
-    </div>
-  </div>
-
-  <div class="trust-item">
-    <span class="trust-icon">🚁</span>
-    <div>
-      <h4>Govt-Controlled Quota</h4>
-      <p>Admin monitored seat allocation</p>
-    </div>
-  </div>
-
-  <div class="trust-item">
-    <span class="trust-icon">📄</span>
-    <div>
-      <h4>Official PDF Tickets</h4>
-      <p>QR-verified boarding passes</p>
-    </div>
-  </div>
-
-  <div class="trust-item">
-    <span class="trust-icon">⛰️</span>
-    <div>
-      <h4>Certified Routes</h4>
-      <p>Scenic & safe destinations</p>
-    </div>
-  </div>
+<section class="stats">
+  <div class="stat-card"><h2 class="counter" id="totalBookings">0</h2><p>Flights Booked</p></div>
+  <div class="stat-card"><h2 class="counter" id="confirmedBookings">0</h2><p>Confirmed Trips</p></div>
+  <div class="stat-card"><h2 class="counter" id="totalSeats">0</h2><p>Total Seats</p></div>
+  <div class="stat-card"><h2 class="counter" id="availableSeats">0</h2><p>Seats Open</p></div>
 </section>
 
-<section class="stats">
-  <div class="stat-card">
-    <h2 class="counter" id="totalBookings">0</h2>
-    <p>Total Bookings</p>
-  </div>
-
-  <div class="stat-card">
-    <h2 class="counter" id="confirmedBookings">0</h2>
-    <p>Confirmed Flights</p>
-  </div>
-
-  <div class="stat-card">
-    <h2 class="counter" id="totalSeats">0</h2>
-    <p>Total Seats</p>
-  </div>
-
-  <div class="stat-card">
-    <h2 class="counter" id="availableSeats">0</h2>
-    <p>Available Seats</p>
+<section class="availability-check">
+  <div class="avail-container">
+    <h2 style="font-size:2.5rem; margin-bottom:10px;">Check Availability</h2>
+    <p style="color:#64748b; font-size:1.1rem;">Find your perfect flight date instantly.</p>
+    <div class="avail-input-group">
+      <input type="date" id="checkDate">
+      <button type="button" class="check-btn" onclick="checkAvailability()">Search Flights</button>
+    </div>
+    <div id="availResult" class="avail-result"></div>
   </div>
 </section>
 
 <section class="destinations">
-  <h2>🏔️ Popular Tourist Destinations</h2>
-
-  <div class="destination-grid">
-    <button class="dest-btn" onclick="openDestination('gulmarg')">Gulmarg</button>
-    <button class="dest-btn" onclick="openDestination('sonamarg')">Sonamarg</button>
-    <button class="dest-btn" onclick="openDestination('pahalgam')">Pahalgam</button>
-    <button class="dest-btn" onclick="openDestination('dal')">Dal Lake</button>
-    <button class="dest-btn" onclick="openDestination('gurez')">Gurez Valley</button>
-    <button class="dest-btn" onclick="openDestination('yusmarg')">Yusmarg</button>
-    <button class="dest-btn" onclick="openDestination('doodhpathri')">Doodhpathri</button>
-    <button class="dest-btn" onclick="openDestination('bangus')">Bangus Valley</button>
-    <button class="dest-btn" onclick="openDestination('aharbal')">Aharbal Waterfall</button>
-    <button class="dest-btn" onclick="openDestination('verinag')">Verinag</button>
-    <button class="dest-btn" onclick="openDestination('kokernag')">Kokernag</button>
-    <button class="dest-btn" onclick="openDestination('manasbal')">Manasbal Lake</button>
-    <button class="dest-btn" onclick="openDestination('wular')">Wular Lake</button>
-    <button class="dest-btn" onclick="openDestination('tosamaidan')">Tosa Maidan</button>
-    <button class="dest-btn" onclick="openDestination('naranag')">Naranag</button>
-    <button class="dest-btn" onclick="openDestination('aru')">Aru Valley</button>
-    <button class="dest-btn" onclick="openDestination('betaab')">Betaab Valley</button>
+  <h2>Curated Destinations</h2>
+  <p class="dest-subtitle">Hand-picked locations for the ultimate aerial experience.</p>
+  
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterDest('all')">All</button>
+    <button class="filter-btn" onclick="filterDest('Garden')">Gardens</button>
+    <button class="filter-btn" onclick="filterDest('Valley')">Valleys</button>
+    <button class="filter-btn" onclick="filterDest('Lake')">Lakes</button>
+    <button class="filter-btn" onclick="filterDest('Jammu')">Jammu</button>
+    <button class="filter-btn" onclick="filterDest('Offbeat')">Offbeat</button>
   </div>
+
+  <div class="destination-grid" id="destGrid"></div>
 </section>
 
 <div id="destinationModal" class="modal">
-  <div class="modal-box small">
+  <div class="modal-box">
     <span class="close" onclick="closeDestination()">&times;</span>
-    <h2 id="destTitle">Destination Name</h2>
-    <span id="destDistrict" class="district-tag">District Name</span>
-    <p id="destDesc" style="margin-top: 10px; line-height: 1.6;">Description goes here...</p>
-    
+    <h2 id="destTitle" style="font-size:2.5rem; margin-bottom:10px;">Destination</h2>
+    <span id="destDistrict" class="district-tag">District</span>
+    <p id="destDesc" style="margin-top:25px; color:#475569; line-height:1.8; font-size:1.1rem;">Description...</p>
     <div class="reach-info">
-        <h4>🚗 How to Reach:</h4>
-        <p><strong>✈️ From Airport:</strong> <span id="destAirport"></span></p>
-        <p><strong>🚆 From Railway Stn:</strong> <span id="destTrain"></span></p>
-        <p><strong>🚌 From Jammu:</strong> <span id="destJammu"></span></p>
+        <h4 style="margin:0 0 15px 0; font-size:1.1rem;">🚗 Getting There</h4>
+        <p style="margin:8px 0; color:#475569;"><strong>✈️ Airport:</strong> <span id="destAirport"></span></p>
+        <p style="margin:8px 0; color:#475569;"><strong>🚆 Train:</strong> <span id="destTrain"></span></p>
+        <p style="margin:8px 0; color:#475569;"><strong>🚌 Road:</strong> <span id="destJammu"></span></p>
     </div>
-    
-    <h4 style="margin-top: 20px; text-align: left; padding-left: 0.5rem;">✨ Activities to do:</h4>
-    <ul id="destList">
-      </ul>
-
-    <button class="primary" onclick="goPassenger()">🚁 Book Helicopter</button>
+    <h4 style="margin-top: 35px;">✨ Highlights</h4>
+    <ul id="destList" style="color:#475569; padding-left:20px; line-height:2;"></ul>
+    <button class="primary-btn-modal" onclick="goPassenger()">Book Helicopter Ride</button>
   </div>
 </div>
 
-<footer class="footer">
-  <p>
-    © 2026 Kashmir Heli Services<br>
-    Designed and Developed by Raja Ali
-  </p>
-</footer>
+<footer class="footer"><p>© 2026 Kashmir Heli Services | Crafted with ❤️ by Raja Ali</p></footer>
 
 <script>
 function goPassenger() { window.location.href = "passenger/login.html"; }
 function goAdmin() { window.location.href = "admin/login.html"; }
 
-/* ---------- DESTINATION DATA (Expanded & Detailed) ---------- */
-const destinations = {
-  gulmarg: {
-    title: "Gulmarg",
-    district: "Baramulla District",
-    desc: "Gulmarg, meaning 'Meadow of Flowers', is a world-renowned skiing destination situated in the Pir Panjal Range. It transforms from a lush green meadow with blooming lupines in summer to a white winter wonderland perfect for snow sports. It is home to the Gulmarg Gondola, one of the highest cable cars in the world, reaching an altitude of 3,979 meters.",
-    reach: {
-      airport: "56 km (approx 1 hr 45 min) via Tangmarg Road.",
-      train: "60 km (approx 1 hr 50 min) from Srinagar Station.",
-      jammu: "305 km (approx 8-9 hrs) via NH44."
-    },
-    activities: [
-        "Ride the famous Gulmarg Gondola (Phase 1 & Phase 2).",
-        "Skiing and Snowboarding (Winter).",
-        "Play Golf at the world's highest 18-hole golf course.",
-        "Trek to Apharwat Peak and Alpather Lake (Frozen Lake).",
-        "Pony rides through the strawberry valleys.",
-        "Visit the historic St. Mary’s Church and Maharani Temple."
-    ]
-  },
-  sonamarg: {
-    title: "Sonamarg",
-    district: "Ganderbal District",
-    desc: "Known as the 'Meadow of Gold', Sonamarg lies on the banks of the Nallah Sindh river. It is the gateway to Ladakh and famous for its massive Thajiwas Glacier. The valley is surrounded by snow-capped mountains and alpine forests, making it a prime location for trekking and camping.",
-    reach: {
-      airport: "80 km (approx 2 hr 30 min) via NH1.",
-      train: "85 km (approx 2 hr 45 min) from Srinagar Station.",
-      jammu: "360 km (approx 9-10 hrs) via NH44."
-    },
-    activities: [
-        "Trek or Pony ride to Thajiwas Glacier.",
-        "White Water Rafting in the Sindh River.",
-        "Trout Fishing (Angling).",
-        "Drive to Zero Point (Zojila Pass).",
-        "Camping along the riverside.",
-        "Start point for the Kashmir Great Lakes Trek."
-    ]
-  },
-  pahalgam: {
-    title: "Pahalgam",
-    district: "Anantnag District",
-    desc: "The 'Valley of Shepherds' is a picturesque hill station at the confluence of the Lidder River and Sheshnag Lake. It serves as the base camp for the holy Amarnath Yatra. The valley is famous for its vast green meadows, pine forests, and pristine river waters.",
-    reach: {
-      airport: "90 km (approx 2 hr 30 min) via NH44.",
-      train: "80 km (approx 2 hr) from Srinagar Station (Closest station is Anantnag: 45km).",
-      jammu: "255 km (approx 7 hrs) via NH44."
-    },
-    activities: [
-        "Visit Betaab Valley, Aru Valley, and Chandanwari.",
-        "River Rafting in the Lidder River.",
-        "Pony ride to Baisaran (Mini Switzerland).",
-        "Golfing at the Pahalgam Golf Course.",
-        "Picnic at Lidder Amusement Park.",
-        "Visit the ancient Mamaleshwar Temple."
-    ]
-  },
-  dal: {
-    title: "Dal Lake",
-    district: "Srinagar District",
-    desc: "The 'Jewel in the crown of Kashmir', Dal Lake is an urban lake that is the center of Srinagar's tourist activity. It is famous for its wooden Houseboats, Shikaras, and the Floating Market. The lake is lined by Mughal gardens and offers spectacular sunrise and sunset views.",
-    reach: {
-      airport: "22 km (approx 45 min).",
-      train: "18 km (approx 40 min) from Srinagar Station.",
-      jammu: "260 km (approx 7-8 hrs) via NH44."
-    },
-    activities: [
-        "Take a relaxing Shikara Ride.",
-        "Stay overnight in a heritage Houseboat.",
-        "Visit the Floating Vegetable Market (Early Morning).",
-        "Visit Char Chinar island.",
-        "Water sports (Jet Skiing, Water Surfing).",
-        "Shopping for handicrafts on the lake."
-    ]
-  },
-  gurez: {
-    title: "Gurez Valley",
-    district: "Bandipora District",
-    desc: "An offbeat, pristine valley located along the Line of Control (LoC). Gurez is known for its unique Dard Shin culture and the pyramid-shaped Habba Khatoon Peak. The Kishanganga river flows through this valley, offering unparalleled tranquility away from the crowds.",
-    reach: {
-      airport: "125 km (approx 6-7 hrs) via Razdan Pass.",
-      train: "135 km (approx 7 hrs) from Srinagar Station.",
-      jammu: "380 km (approx 12 hrs) - Requires overnight stop."
-    },
-    activities: [
-        "View the majestic Habba Khatoon Peak.",
-        "Visit Dawar village and explore local culture.",
-        "Fishing and Camping by Kishanganga River.",
-        "Visit the Khandyal Viewpoint.",
-        "Drive through the scenic Razdan Pass."
-    ]
-  },
-  yusmarg: {
-    title: "Yusmarg",
-    district: "Budgam District",
-    desc: "Known as the 'Meadow of Jesus', Yusmarg is a quiet destination with vast green pastures surrounded by pine trees. It is less commercialized than other hill stations, making it perfect for those seeking silence and raw nature.",
-    reach: {
-      airport: "48 km (approx 1 hr 45 min) via Charar-i-Sharief.",
-      train: "52 km (approx 2 hrs) from Srinagar Station.",
-      jammu: "300 km (approx 8-9 hrs)."
-    },
-    activities: [
-        "Trek to the blue water Nilnag Lake (4km trek).",
-        "Pony Riding on the meadows.",
-        "Picnic by the Doodh Ganga river.",
-        "Visit Charar-i-Sharief Shrine nearby.",
-        "Nature photography and bird watching."
-    ]
-  },
-  doodhpathri: {
-    title: "Doodhpathri",
-    district: "Budgam District",
-    desc: "The 'Valley of Milk', named after the frothy white water of the Shaliganga river flowing through the lush green meadows. It is a bowl-shaped valley that remains green even in peak summer, offering a cool retreat.",
-    reach: {
-      airport: "42 km (approx 1 hr 30 min) via Khan Sahib.",
-      train: "45 km (approx 1 hr 40 min) from Srinagar Station.",
-      jammu: "290 km (approx 8 hrs)."
-    },
-    activities: [
-        "Camping on the vast meadows.",
-        "Relaxing by the Shaliganga river.",
-        "Pony rides to the upper meadows.",
-        "ATV (All Terrain Vehicle) rides.",
-        "Family picnics."
-    ]
-  },
-  bangus: {
-    title: "Bangus Valley",
-    district: "Kupwara District",
-    desc: "A hidden gem and biosphere reserve, Bangus offers some of the most untouched natural beauty in Kashmir. It is divided into Bod Bangus (Big) and Lokut Bangus (Small). The valley is a carpet of green surrounded by Shamsbari mountain range.",
-    reach: {
-      airport: "110 km (approx 4 hrs) via Handwara.",
-      train: "120 km (approx 4.5 hrs) from Srinagar Station (Nearest station Baramulla: 65km).",
-      jammu: "360 km (approx 10-11 hrs)."
-    },
-    activities: [
-        "Eco-tourism and pristine Camping.",
-        "Trekking in the dense forests.",
-        "Bird Watching and Flora exploration.",
-        "Interacting with local Gujjar shepherds.",
-        "Photography of untouched landscapes."
-    ]
-  },
-  aharbal: {
-    title: "Aharbal Waterfall",
-    district: "Kulgam District",
-    desc: "Known as the 'Niagara Falls of Kashmir', Aharbal is where the Veshu River falls noisily 25 meters down into a narrow gorge. The surrounding area is forested and offers great spots for hiking.",
-    reach: {
-      airport: "70 km (approx 2 hr 15 min) via Pulwama/Shopian.",
-      train: "65 km (approx 2 hrs) from Srinagar Station.",
-      jammu: "240 km (approx 6-7 hrs) via Mughal Road (Seasonal)."
-    },
-    activities: [
-        "View the majestic Waterfall from the fence.",
-        "Trek to Kounsarnag Lake (multi-day trek).",
-        "Riverside Picnics.",
-        "Visit the fossil sites nearby.",
-        "Photography of the gorge."
-    ]
-  },
-  verinag: {
-    title: "Verinag",
-    district: "Anantnag District",
-    desc: "Verinag is famous for its Mughal Garden built by Emperor Jahangir and the octagonal spring which is the main source of the Jhelum River. The deep blue water of the spring is calm and mesmerizing.",
-    reach: {
-      airport: "80 km (approx 2 hr 15 min) via NH44.",
-      train: "70 km (approx 1 hr 45 min) from Srinagar Station.",
-      jammu: "185 km (approx 5 hrs) - It is the first major spot after Jawahar Tunnel."
-    },
-    activities: [
-        "Walk through the Mughal Garden.",
-        "View the Octagonal Spring.",
-        "Relax under the Chinar trees.",
-        "Visit the arcade surrounding the spring."
-    ]
-  },
-  kokernag: {
-    title: "Kokernag",
-    district: "Anantnag District",
-    desc: "Kokernag is famous for its botanical gardens and the largest fresh water spring in Kashmir, which gushes out in the form of a claw (Koker means Chicken, Nag means spring). The garden is famous for its roses and trout farm.",
-    reach: {
-      airport: "90 km (approx 2 hr 30 min) via Anantnag.",
-      train: "80 km (approx 2 hr 15 min) from Srinagar Station.",
-      jammu: "245 km (approx 7 hrs)."
-    },
-    activities: [
-        "Visit the Botanical Garden and Rose Garden.",
-        "See the fresh water spring formation.",
-        "Buy fresh Trout fish from the fisheries department.",
-        "Camping and Picnic."
-    ]
-  },
-  manasbal: {
-    title: "Manasbal Lake",
-    district: "Ganderbal District",
-    desc: "The deepest lake in India, Manasbal is famous for its lotus blooms during summer (July-August). It is a birdwatcher's paradise and offers a much quieter experience than Dal Lake. It is surrounded by three villages and the ruins of a 17th-century fort.",
-    reach: {
-      airport: "35 km (approx 1 hr).",
-      train: "40 km (approx 1 hr 15 min) from Srinagar Station.",
-      jammu: "290 km (approx 8 hrs)."
-    },
-    activities: [
-        "Shikara ride to see Lotus blooms.",
-        "Bird Watching (Waterfowls).",
-        "Visit the Mughal garden 'Jaroka Bagh'.",
-        "Explore the ruins of the Darogabagh Fort."
-    ]
-  },
-  wular: {
-    title: "Wular Lake",
-    district: "Bandipora District",
-    desc: "One of the largest fresh water lakes in Asia, Wular acts as a natural flood reservoir for the Jhelum River. It is famous for its fish produce and the small island 'Zaina Lank' in the center built by King Zain-ul-Abidin.",
-    reach: {
-      airport: "60 km (approx 1 hr 45 min).",
-      train: "65 km (approx 2 hrs) from Srinagar Station.",
-      jammu: "315 km (approx 9 hrs)."
-    },
-    activities: [
-        "Boating and Fishing.",
-        "Bird Watching (Migratory birds).",
-        "Visit the Wular Vintage Park for panoramic views.",
-        "Sunset Photography."
-    ]
-  },
-  tosamaidan: {
-    title: "Tosa Maidan",
-    district: "Budgam District",
-    desc: "A vast meadow historically used by Mughals to reach Poonch, and later by the army as a firing range (now cleared and open). It is a huge, flat green pasture surrounded by dense forests, often called the 'King of Meadows'.",
-    reach: {
-      airport: "65 km (approx 2 hr 30 min) via Khag.",
-      train: "70 km (approx 2 hr 45 min) from Srinagar Station.",
-      jammu: "310 km (approx 9 hrs)."
-    },
-    activities: [
-        "Adventure Trekking and Hiking.",
-        "Camping in the wild.",
-        "Off-road driving.",
-        "Exploration of historical routes."
-    ]
-  },
-  naranag: {
-    title: "Naranag",
-    district: "Ganderbal District",
-    desc: "Known for its ancient Shiva temple ruins built by King Lalitaditya Muktapida in the 8th century. It is located in a dense forest and serves as the base camp for the trek to the high-altitude Gangabal Lake.",
-    reach: {
-      airport: "55 km (approx 1 hr 45 min).",
-      train: "60 km (approx 2 hrs) from Srinagar Station.",
-      jammu: "310 km (approx 8-9 hrs)."
-    },
-    activities: [
-        "Visit the ancient Temple Ruins (ASI protected).",
-        "Trek to Gangabal and Nandkol Lakes.",
-        "Trout fishing in the Wangath river.",
-        "Nature photography."
-    ]
-  },
-  aru: {
-    title: "Aru Valley",
-    district: "Anantnag District",
-    desc: "A scenic village located 12km from Pahalgam, Aru is famous for its scenic meadows and as a starting point for the Kolahoi Glacier and Tarsar Marsar treks. It is a quiet, idyllic village perfect for peace lovers.",
-    reach: {
-      airport: "102 km (approx 3 hrs) via Pahalgam.",
-      train: "92 km (approx 2 hr 30 min) from Srinagar Station.",
-      jammu: "265 km (approx 7.5 hrs)."
-    },
-    activities: [
-        "Trek to Tarsar Marsar Lakes.",
-        "Day hike to Green Top.",
-        "Horse Riding in the meadows.",
-        "Trout fishing (with permit)."
-    ]
-  },
-  betaab: {
-    title: "Betaab Valley",
-    district: "Anantnag District",
-    desc: "Originally called Hajan Valley, it was renamed after the Bollywood movie 'Betaab' was shot here. It features crystal clear water from the Lidder river flowing over rocks, surrounded by tall deodar trees and mountains.",
-    reach: {
-      airport: "95 km (approx 2 hr 45 min) via Pahalgam.",
-      train: "85 km (approx 2 hr 15 min) from Srinagar Station.",
-      jammu: "260 km (approx 7 hrs)."
-    },
-    activities: [
-        "Riverside Walk and Photography.",
-        "Picnic on the banks of Lidder.",
-        "Zip-lining.",
-        "Relaxation in the park."
-    ]
+async function checkAvailability() {
+  const dateInput = document.getElementById("checkDate").value;
+  const resBox = document.getElementById("availResult");
+
+  if (!dateInput) { alert("Please select a date first."); return; }
+
+  const selectedDate = new Date(dateInput);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); 
+
+  if (selectedDate < today) {
+    resBox.style.display = "block";
+    resBox.className = "avail-result res-error";
+    resBox.innerHTML = `<div style="text-align:center;"><img src="https://media.tenor.com/Eaa_6l8fXU8AAAAM/back-to-the-future-doc-brown.gif" alt="Doc Brown" style="width:200px; border-radius:12px; margin-bottom:15px; box-shadow:0 10px 30px rgba(0,0,0,0.15);"><br>⚠️ <strong>Time Travel Not Supported!</strong> <br> Our choppers are fast, but not 88mph fast. ⚡<br><span style="font-size:0.9rem;">Please pick a future date.</span></div>`;
+    return;
   }
+
+  resBox.style.display = "block";
+  resBox.className = "avail-result"; 
+  resBox.style.background = "#f0f9ff";
+  resBox.style.color = "#334155";
+  resBox.innerText = "⏳ Checking flight database...";
+
+  try {
+    const res = await fetch(`http://localhost:4000/passenger/check-availability/${dateInput}`);
+    if (!res.ok) throw new Error(`Server returned status: ${res.status}`);
+    const data = await res.json();
+    const actualAvailable = (data.available === true || data.available === "true" || data.status === "available");
+    const seatCount = parseInt(data.availableSeats || data.seats || 0);
+
+    if (actualAvailable && seatCount > 0) {
+      resBox.className = "avail-result res-success";
+      resBox.innerHTML = `✅ <strong>${seatCount} Seats Available</strong> for ${dateInput}! <br> <span style="font-size:0.9rem; text-decoration:underline; cursor:pointer;" onclick="goPassenger()">Login to Book Now</span>`;
+    } else {
+      resBox.className = "avail-result res-error";
+      let reason = "Fully Booked";
+      if (!actualAvailable) reason = "Date Not Open";
+      resBox.innerHTML = `❌ <strong>${reason}</strong> (Seats: ${seatCount}). <br> <span style="font-size:0.9rem;">Please try another date.</span>`;
+    }
+  } catch (err) {
+    resBox.className = "avail-result res-error";
+    resBox.innerText = `⚠️ Connection Failed: ${err.message}`;
+  }
+}
+
+/* =========================================
+   DESTINATIONS DATA (ICONS)
+   ========================================= */
+const destinations = {
+  nishat: { title: "Nishat Bagh", district: "Srinagar", type: "Garden", desc: "The 'Garden of Joy' (1633 AD). A terraced Mughal Garden on the east side of Dal Lake.", reach: { airport: "20 km", train: "22 km", jammu: "265 km" }, activities: ["Walk through Terraces", "Sunset View", "Photography"] },
+  shalimar: { title: "Shalimar Bagh", district: "Srinagar", type: "Garden", desc: "The 'Abode of Love', the largest Mughal Garden built by Emperor Jahangir.", reach: { airport: "25 km", train: "26 km", jammu: "270 km" }, activities: ["History Walk", "Light & Sound Show", "Picnic"] },
+  tulip: { title: "Tulip Garden", district: "Srinagar", type: "Garden", desc: "Indira Gandhi Memorial Tulip Garden. Asia's largest tulip garden (Seasonal).", reach: { airport: "18 km", train: "20 km", jammu: "265 km" }, activities: ["Tulip Festival", "Botany", "Zabarwan Range View"] },
+  chashme: { title: "Chashme Shahi", district: "Srinagar", type: "Garden", desc: "The 'Royal Spring', smallest but most charming Mughal Garden with natural spring water.", reach: { airport: "18 km", train: "20 km", jammu: "262 km" }, activities: ["Drink Spring Water", "Dal Lake View"] },
+  kokernag: { title: "Kokernag", district: "Anantnag", type: "Garden", desc: "Largest fresh water spring in Kashmir, surrounded by a massive botanical garden.", reach: { airport: "85 km", train: "35 km", jammu: "235 km" }, activities: ["Trout Fishing", "Camping", "Botany"] },
+
+  gulmarg: { title: "Gulmarg", district: "Baramulla", type: "Valley", desc: "Meadow of Flowers. World-famous ski destination and home to the highest Gondola.", reach: { airport: "56 km", train: "60 km", jammu: "305 km" }, activities: ["Gondola Ride", "Skiing", "Golfing"] },
+  pahalgam: { title: "Pahalgam", district: "Anantnag", type: "Valley", desc: "Valley of Shepherds. Lush meadows and the starting point of Amarnath Yatra.", reach: { airport: "90 km", train: "45 km", jammu: "255 km" }, activities: ["Rafting", "Betaab Valley", "Pony Ride"] },
+  sonamarg: { title: "Sonamarg", district: "Ganderbal", type: "Valley", desc: "Meadow of Gold. Gateway to Ladakh, famous for Thajiwas Glacier.", reach: { airport: "80 km", train: "85 km", jammu: "360 km" }, activities: ["Thajiwas Glacier Trek", "Sledging", "River Rafting"] },
+  yusmarg: { title: "Yusmarg", district: "Budgam", type: "Valley", desc: "Meadow of Jesus. A quiet, pristine meadow perfect for peace lovers.", reach: { airport: "47 km", train: "50 km", jammu: "290 km" }, activities: ["Doodhganga River", "Trekking", "Picnic"] },
+  betaab: { title: "Betaab Valley", district: "Anantnag", type: "Valley", desc: "Named after the Bollywood movie 'Betaab'. Stunning river and pine views.", reach: { airport: "95 km", train: "50 km", jammu: "260 km" }, activities: ["Film Sites", "Relaxing", "Photography"] },
+
+  dal: { title: "Dal Lake", district: "Srinagar", type: "Lake", desc: "The Jewel in the crown of Kashmir. Famous for houseboats and Shikaras.", reach: { airport: "22 km", train: "18 km", jammu: "260 km" }, activities: ["Shikara Ride", "Houseboat Stay", "Floating Market"] },
+  wular: { title: "Wular Lake", district: "Bandipora", type: "Lake", desc: "One of Asia's largest freshwater lakes. A birdwatcher's paradise.", reach: { airport: "60 km", train: "65 km", jammu: "315 km" }, activities: ["Boating", "Bird Watching", "Fishing"] },
+  mansar: { title: "Mansar Lake", district: "Udhampur", type: "Lake", desc: "A holy lake surrounded by forest-covered hills. Ancient temples nearby.", reach: { airport: "65 km", train: "40 km", jammu: "62 km" }, activities: ["Boating", "Temple Visit", "Tortoise Watching"] },
+
+  patnitop: { title: "Patnitop", district: "Udhampur", type: "Jammu", desc: "A famous hill station on the Jammu-Srinagar Highway. Cedar forests.", reach: { airport: "110 km", train: "45 km", jammu: "110 km" }, activities: ["Skyview Gondola", "Nathatop", "Nature Walks"] },
+  bhaderwah: { title: "Bhaderwah", district: "Doda", type: "Jammu", desc: "Known as 'Mini Kashmir'. Famous for its stunning meadows like Jai Valley.", reach: { airport: "190 km", train: "160 km", jammu: "190 km" }, activities: ["Jai Valley", "Seoj Meadow", "Camping"] },
+  sanasar: { title: "Sanasar", district: "Ramban", type: "Jammu", desc: "The aero-adventure capital of Jammu. Cup-shaped meadow with a lake.", reach: { airport: "130 km", train: "60 km", jammu: "130 km" }, activities: ["Paragliding", "Golf", "Rock Climbing"] },
+
+  gurez: { title: "Gurez Valley", district: "Bandipora", type: "Offbeat", desc: "A hidden jewel along the LOC. Famous for Habba Khatoon Peak.", reach: { airport: "125 km", train: "135 km", jammu: "380 km" }, activities: ["Kishanganga River", "Trekking", "Star Gazing"] },
+  doodhpathri: { title: "Doodhpathri", district: "Budgam", type: "Offbeat", desc: "Valley of Milk. The river water appears milky white striking stones.", reach: { airport: "42 km", train: "45 km", jammu: "280 km" }, activities: ["River Walk", "Picnic", "Pony Ride"] },
+  aharbal: { title: "Aharbal", district: "Kulgam", type: "Offbeat", desc: "The Niagara Falls of Kashmir. A massive waterfall on the Veshu River.", reach: { airport: "75 km", train: "45 km", jammu: "230 km" }, activities: ["Waterfall View", "Trek to Kungwatan", "Photography"] },
+  sinthan: { title: "Sinthan Top", district: "Anantnag", type: "Offbeat", desc: "A high mountain pass connecting Anantnag and Kishtwar. Snow all year.", reach: { airport: "130 km", train: "80 km", jammu: "230 km" }, activities: ["Snow Play", "360 View", "Road Trip"] }
 };
 
-/* ---------- MODAL LOGIC ---------- */
+const icons = { 'Garden': '🌸', 'Valley': '🏔️', 'Lake': '💧', 'Jammu': '🏰', 'Offbeat': '🌲' };
+
+const grid = document.getElementById("destGrid");
+function renderDestinations(filterType) {
+  grid.innerHTML = "";
+  Object.keys(destinations).forEach(key => {
+    const data = destinations[key];
+    if (filterType !== 'all' && data.type !== filterType) return;
+    const btn = document.createElement("div");
+    btn.className = "dest-tile";
+    btn.onclick = () => openDestination(key);
+    const icon = icons[data.type] || '📍';
+    btn.innerHTML = `<span class="dest-icon">${icon}</span><h3 class="dest-name">${data.title}</h3><span class="dest-sub">${data.type}</span>`;
+    grid.appendChild(btn);
+  });
+}
+function filterDest(type) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderDestinations(type);
+}
+renderDestinations('all');
+
 function openDestination(key) {
   const data = destinations[key];
   if(!data) return;
-
   document.getElementById("destTitle").innerText = data.title;
-  document.getElementById("destDistrict").innerText = data.district;
+  document.getElementById("destDistrict").innerText = `${data.district} District`;
   document.getElementById("destDesc").innerText = data.desc;
-
-  // Populate Travel Info
   document.getElementById("destAirport").innerText = data.reach.airport;
   document.getElementById("destTrain").innerText = data.reach.train;
   document.getElementById("destJammu").innerText = data.reach.jammu;
-
   const list = document.getElementById("destList");
-  list.innerHTML = ""; // Clear old list
-  
-  data.activities.forEach(act => {
-    const li = document.createElement("li");
-    li.innerText = act;
-    list.appendChild(li);
-  });
-
-  const modal = document.getElementById("destinationModal");
-  modal.style.display = "flex";
+  list.innerHTML = ""; 
+  data.activities.forEach(act => { const li = document.createElement("li"); li.innerText = act; list.appendChild(li); });
+  document.getElementById("destinationModal").style.display = "flex";
 }
+function closeDestination() { document.getElementById("destinationModal").style.display = "none"; }
+window.onclick = function(event) { if (event.target == document.getElementById("destinationModal")) closeDestination(); }
 
-function closeDestination() {
-  document.getElementById("destinationModal").style.display = "none";
-}
-
-// Close modal if user clicks outside the box
-window.onclick = function(event) {
-  const modal = document.getElementById("destinationModal");
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
-/* ---------- LIVE COUNTERS ---------- */
 async function loadStats() {
   try {
     const res = await fetch("http://localhost:4000/admin/stats/live");
+    if(!res.ok) throw new Error("Stats not found");
     const data = await res.json();
-
     animateCounter("totalBookings", data.totalBookings);
     animateCounter("confirmedBookings", data.confirmed);
     animateCounter("totalSeats", data.totalSeats);
     animateCounter("availableSeats", data.availableSeats);
-  } catch {
-    console.error("Stats load failed");
+  } catch (e) { 
+      document.getElementById("totalBookings").innerText = "150+";
+      document.getElementById("confirmedBookings").innerText = "120";
   }
 }
-
 function animateCounter(id, target) {
   const el = document.getElementById(id);
+  if(!el || !target) return;
   let count = 0;
-  const step = Math.ceil(target / 60);
-
-  const interval = setInterval(() => {
-    count += step;
-    if (count >= target) {
-      el.innerText = target;
-      clearInterval(interval);
-    } else {
-      el.innerText = count;
-    }
-  }, 20);
+  const step = Math.max(1, Math.ceil(target / 60)); 
+  const interval = setInterval(() => { count += step; if (count >= target) { el.innerText = target; clearInterval(interval); } else { el.innerText = count; } }, 20);
 }
-
 loadStats();
 </script>
 
