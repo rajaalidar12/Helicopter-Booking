@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Bookings | Kashmir Heli Services</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../css/passenger.css">
+
+<style>
+/* ================= VARIABLES & RESET ================= */
+:root {
+  --primary: #0ea5e9;
+  --primary-dark: #0284c7;
+  --text-dark: #0f172a;
+  --glass-bg: rgba(255, 255, 255, 0.90);
+  --glass-border: rgba(255, 255, 255, 0.5);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+body {
+  background-color: #0f172a; 
+  /* Using same Gulmarg image for consistency */
+  background-image: linear-gradient(rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.6)), url('https://upload.wikimedia.org/wikipedia/commons/e/eb/Gulmarg_winter.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  min-height: 100vh;
+  padding: 30px 20px;
+  color: var(--text-dark);
+}
+
+/* ================= CONTAINER ================= */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ================= HEADER ================= */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: white;
+}
+header h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+header p { opacity: 0.9; margin-top: 5px; font-weight: 300; }
+
+/* ================= BOOKING LIST CARD ================= */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  padding: 30px;
+  min-height: 400px;
+}
+
+/* ================= TICKET ITEMS ================= */
+.booking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.booking-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.1);
+  border-color: var(--primary);
+}
+
+.info h4 { font-size: 1.1rem; color: var(--text-dark); margin-bottom: 4px; }
+.info span { font-size: 0.9rem; color: #64748b; display: block; margin-top: 2px; }
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-left: 10px;
+}
+.status-confirmed { background: #dcfce7; color: #166534; }
+.status-cancelled { background: #fee2e2; color: #991b1b; }
+
+.btn-manage {
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+.btn-manage:hover { background: var(--primary-dark); }
+
+/* ================= UTILITIES ================= */
+.loading { text-align: center; padding: 40px; color: #64748b; font-size: 1.1rem; }
+.empty-state { text-align: center; padding: 50px 20px; }
+.nav-links { margin-top: 20px; text-align: center; }
+.nav-links a { color: white; text-decoration: none; margin: 0 10px; font-weight: 500; opacity: 0.9; }
+.nav-links a:hover { text-decoration: underline; opacity: 1; }
+
+@media (max-width: 600px) {
+  .booking-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+  .btn-manage { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h2>Your Journeys</h2>
+    <p>View history and manage upcoming trips</p>
+  </header>
+
+  <div class="glass-panel">
+    <div id="list" class="loading">Loading your bookings...</div>
+  </div>
+
+  <div class="nav-links">
+    <a href="dashboard.html">← Dashboard</a>
+    <a href="book.html">Book New Flight</a>
+    <a href="#" onclick="passengerLogout()">Sign Out</a>
+  </div>
+</div>
+
+<script src="../js/passenger.js"></script>
+
+<script>
+  // On page load, trigger the function we wrote in passenger.js
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check login
+    if(!localStorage.getItem("passengerToken")){
+      window.location.href = 'login.html';
+    } else {
+      // Call the function from passenger.js
+      loadMyBookings(); 
+    }
+  });
+
+  // Overwriting the loadMyBookings specifically for this nice UI
+  // (You can put this logic inside passenger.js if you prefer, 
+  // but keeping it here isolates the UI logic for this specific page)
+  window.loadMyBookings = async function() {
+    const token = localStorage.getItem("passengerToken");
+    const box = document.getElementById("list");
+
+    try {
+      const res = await fetch("http://localhost:4000/passenger/my-bookings", {
+        headers: { Authorization: "Bearer " + token }
+      });
+      
+      const data = await res.json();
+
+      if (!res.ok) {
+        box.innerHTML = `<div class="empty-state">❌ ${data.message}</div>`;
+        return;
+      }
+
+      if (data.length === 0) {
+        box.innerHTML = `
+          <div class="empty-state">
+            <h3 style="color:#64748b">No bookings found</h3>
+            <p style="margin-top:10px">You haven't booked any flights yet.</p>
+            <a href="book.html" style="display:inline-block; margin-top:20px; color:var(--primary); font-weight:bold; text-decoration:none;">Book Now →</a>
+          </div>`;
+        return;
+      }
+
+      // Render the list
+      box.innerHTML = "";
+      data.forEach(b => {
+        // Handle PNR vs TicketNumber naming
+        const pnr = b.ticketNumber || b.pnr;
+        const statusClass = (b.status === 'Confirmed' || b.status === 'Active') ? 'status-confirmed' : 'status-cancelled';
+        
+        const itemHtml = `
+          <div class="booking-item">
+            <div class="info">
+              <h4>${b.from} ➝ ${b.to} <span class="status-badge ${statusClass}">${b.status}</span></h4>
+              <span>📅 Date: <strong>${b.date}</strong></span>
+              <span>🎟️ PNR: ${pnr}</span>
+            </div>
+            <a href="manage.html?ticket=${pnr}" class="btn-manage">Manage / View</a>
+          </div>
+        `;
+        box.innerHTML += itemHtml;
+      });
+
+    } catch (err) {
+      console.error(err);
+      box.innerHTML = `<div class="empty-state">⚠️ Server error. Please try again later.</div>`;
+    }
+  };
+</script>
+
+</body>
+</html>
